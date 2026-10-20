@@ -3,8 +3,8 @@ import requests, os
 import google.generativeai  as genai
 from dotenv import load_dotenv
 load_dotenv()
-from bots.nguo_bot import reply_nguo
-from bots.phone_bot import reply_phone
+from nguo_bot import reply_nguo
+from phone_bot import reply_phone
 
 ID_nguo = "123.."
 ID_phone = "456..",
