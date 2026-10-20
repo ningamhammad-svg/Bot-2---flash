@@ -1,29 +1,35 @@
 from flask import Flask, jsonify, request
 import requests, os
 import google.generativeai  as genai
-
 from dotenv import load_dotenv
 load_dotenv()
+from bots.nguo_bot import reply_nguo
+from bots.phone_bot import reply_phone
+
+ID_nguo = "123.."
+ID_phone = "456.."
+@app.r
 genai.configure(api_key=os.getenv("GEMINI_API_KEY")) 
 
 SYSTEM_PROMPT = """
     Wewe ni NingaBot, bot wa biashara kutoka Dar es salaam Tanzania.
-    Biashara unayofanya ni ya kuuza nguo pamoja na viatu.
-    Brand ya biashara yako ni "PENDEZA NA NINGA FASHION".
+    Biashara unayofanya ni ya kuuza simu za aina zote.
+    Brand ya biashara yako ni "NINGA TELLEPHONE ACCESSORIES".
     Boss wako ni huyu hapa anaitwa NINGA.
     NAMBA YAKE YA WHATSAPP NI +255 780244426.
-    KAMA MTEJA ATAMUHITAJI MTUMIE MESSAGE KWENYE NAMBA HIYO.
+    KAMA MTEJA ATAMUHITAJI AMTUMIE MESSAGE KWENYE NAMBA HIYO.
     Ongea kiingereza fasaha kama mteja kakuongelesha kiingereza na kiswahili fasaha, cha mtaani, na kifupi na chenye heshima na care ya juu ya huduma kwa wateja.
     KAZI YAKO KUBWA: Tambua nia (intent) ya mteja, usijibu neno kwa neno.
     Mfano:
     -Mteja akisema "mambo, vipi, hey, hello, habari, za asubuhi au za jion, wewe -> Jibu  poa au safi au salama na muulize anahitaji msaada gani?
-    -Mteja akikuuliza mnafanya biashara gani  -> mjibu tunauza nguo na viatu kwa bei rafiki kabisa boss wangu, KARIBU!.
-    -Mteja akiuliza nguo za aina gani -> Jibu za aina zote, za kike na kiume, wadogo kwa wakubwa bei sawa na bure kabisa boss!Nakusikiliza..
+    -Mteja akikuuliza mnafanya biashara gani  -> mjibu tunauza SIMU kwa bei rafiki kabisa boss wangu, KARIBU!.
+    -Mteja akiuliza SIMU za aina gani -> Jibu za aina zote,  bei sawa na bure kabisa boss!Nakusikiliza..
     -Mteja akisema "bei gani, mnauzaje, zinaendaje, package, gharama" -> hizi ni bei:
-           -suruali za wakubwa special za aina zote 20k.
-           -mashati ya wakubwa special aina zote 15k.
-           -suruali na shati za watoto wadogo age 5 had 10 kila moja 5k.
-           -suruali na shat za watoto age(miaka) 10 hadi 18 10k.
+           -samssung s9 = 200k
+           -Samssung s20 = 230k
+           -Iphone 11pro = 300
+           -Iphone 17proMax = 550k
+           na zingine unazozifahamu wewe mtajie na bei zake.
     -Mteja akisema"mko wapi, mnapatikana wapi, location, ofisi" -> Hii ni location: Dar es salaam, tunafanya kazi TZ nzima, delivery pia zinapatikana.
     -Kisema "nataka kulipia bidhaa yeyote katika hizo, au nalipiaje, au lipa au malipo" -> Hii ni lipa Airtel(+255 780244426) - Jina Mohamedi Musa.
     -Mteja akisema "nataka mtu , binadamu, wakala au Agent" -> Jibu: "Sawa boss, ngoja nimpe wakala wangu" then mtumie message boss wako WhatsApp number=(+255 780244426).
@@ -32,6 +38,8 @@ SYSTEM_PROMPT = """
      2.kama hujui kitu mwambia " Kwa msaada mtafute busnesss manager wangu kwa namba +255 780244426.
      3.jibu kwa ufupi.
      4.Kumbuka mteja alichosema hapo awali.
+     5.usimsumbue mteja kwa kumtumia message nyingi kwa wakati mmoja.
+     6.usimtumie message mteja kama hajakutafuta mwenyewe.
      """
 def get_ai_reply(user_message):
     try:
@@ -52,4 +60,54 @@ def send_whatsapp_reply(to, text):
     r = requests.post(url, headers=headers, json=payload)
     print(f"SEND REPLY STATUS: {r.status_code} - {r.text}")
     return r
+
 app = Flask(__name__)
+VERIFY_TOKEN = os.getenv("VERIFY_TOKEN", "NEGRO343")
+WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN")
+PHONE_NUMBER_ID = os.getenv("PHONE_NUMBER_ID")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+@app.route("/")
+def home():
+    return "Ninga Bot is Live! ✅", 200
+
+@app.route("/webhook", methods=["GET"])
+def verify():
+    mode = request.args.get("hub.mode")
+    token = request.args.get("hub.verify_token")
+    challenge = request.args.get("hub.challenge")
+    if mode == "subscribe" and token == VERIFY_TOKEN:
+        return challenge, 200
+    return "Verification failed", 403
+
+@app.route("/webhook", methods=["POST"])
+def webhook():
+    phone_id = request.get_json()['entry'][0]['changes']['value']['metadata']['phone_number_id']
+    text = request.get_json()['entry'][0]['changes']['value']['message']['0']['text']['body']
+    if phone_id == ID_nguo:
+        reply = reply_nguo(text)
+    else:
+        reply = reply_phone(text)
+    data = request.get_json()
+    print(f"INCOMING: {data}")  # <-- HII NDIO ULIYOZUNGUSHIA, IPO HAPA
+
+    try:
+        if data and data.get("object") == "whatsapp_business_account":
+            for entry in data.get("entry", []):
+                for change in entry.get("changes", []):
+                    value = change.get("value", {})
+                    messages = value.get("messages")
+                    if messages:
+                        for msg in messages:
+                            from_num = msg.get("from")
+                            msg_body = msg.get("text", {}).get("body", "")
+                            if msg_body:
+                                print(f"MESSAGE FROM {from_num}: {msg_body}")
+                                reply = get_ai_reply(msg_body)
+                                send_whatsapp_reply(from_num, reply)
+    except Exception as e:
+             print(f"ERROR: {e}")     
+    return "OK", 200                  
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
