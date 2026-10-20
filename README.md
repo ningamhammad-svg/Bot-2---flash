@@ -1,5 +1,5 @@
 # Bot-2---flash/
-|- app.py
+|- bot.py
 |- requirements.txt
   - bots/
     |-nguo_bot.py
