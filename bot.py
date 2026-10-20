@@ -8,7 +8,6 @@ from bots.phone_bot import reply_phone
 
 ID_nguo = "123.."
 ID_phone = "456.."
-@app.r
 genai.configure(api_key=os.getenv("GEMINI_API_KEY")) 
 
 SYSTEM_PROMPT = """
