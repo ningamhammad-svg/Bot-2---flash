@@ -3,11 +3,8 @@ import requests, os
 import google.generativeai  as genai
 from dotenv import load_dotenv
 load_dotenv()
-from nguo_bot import reply_nguo
-from phone_bot import reply_phone
 
-ID_nguo = "123.."
-ID_phone = "456..",
+
 genai.configure(api_key=os.getenv("GEMINI_API_KEY")) 
 SYSTEM_PROMPT = """
     Wewe ni NingaBot, bot wa biashara kutoka Dar es salaam Tanzania.
@@ -79,12 +76,6 @@ def verify():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    phone_id = request.get_json()['entry'][0]['changes']['value']['metadata']['phone_number_id']
-    text = request.get_json()['entry'][0]['changes']['value']['message']['0']['text']['body']
-    if phone_id == ID_nguo:
-        reply = reply_nguo(text)
-    else:
-        reply = reply_phone(text)
     data = request.get_json()
     print(f"INCOMING: {data}")  # <-- HII NDIO ULIYOZUNGUSHIA, IPO HAPA
 
