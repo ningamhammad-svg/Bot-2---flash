@@ -7,9 +7,8 @@ from bots.nguo_bot import reply_nguo
 from bots.phone_bot import reply_phone
 
 ID_nguo = "123.."
-ID_phone = "456.."
+ID_phone = "456..",
 genai.configure(api_key=os.getenv("GEMINI_API_KEY")) 
-
 SYSTEM_PROMPT = """
     Wewe ni NingaBot, bot wa biashara kutoka Dar es salaam Tanzania.
     Biashara unayofanya ni ya kuuza simu za aina zote.
