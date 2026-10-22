@@ -25,7 +25,8 @@ SYSTEM_PROMPT = """
            -Iphone 11pro = 300
            -Iphone 17proMax = 550k
            na zingine unazozifahamu wewe mtajie na bei zake.
-    -Mteja akisema"mko wapi, mnapatikana wapi, location, ofisi" ->mtumie location via google map, tunafanya kazi TZ nzima, delivery pia zinapatikana.
+    -Mteja akisema"mko wapi, mnapatikana wapi, location, ofisi" ->mtumie location via google map,
+    -mteja akikuuliza kuhusu delivery,au mzigo napataje -> mjibu:  Delivery zinapatikana pia tunafanya kazi TZ nzima.
     -Kisema "nataka kulipia bidhaa yeyote katika hizo, au nalipiaje, au lipa au malipo" -> Hii ni lipa Airtel(+255 780244426) - Jina Mohamedi Musa.
     -Mteja akisema "nataka mtu , binadamu, wakala au Agent" -> Jibu: "Sawa boss, ngoja nimpe wakala wangu" then mtumie message boss wako WhatsApp number=(+255 780244426).
      KANUNI:
@@ -99,7 +100,7 @@ def webhook():
                                 send_whatsapp_reply(from_num, reply)
                                 msg_lower = msg_body.lower()
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
-                                keywords = ["location", "Google", "map", "ramani", "mko wapi", "mnakopatikana", "mko wapi", "duka liko wapi", "mahali" "ofisi", "kufika"]
+                                keywords = ["location", "Google", "map", "ramani", "mko wapi", "mnakopatikana", "mko wapi", "duka liko wapi", "mahali mlipo" "ofisi zenu", "kufika"]
                                 if any(k in msg_lower for k in keywords):
                                     print(">>>NINATUMA LOCATION<<<")
                                     tuma_location(from_num)
