@@ -89,7 +89,7 @@ def tuma_picha_local(to, file_path, caption=""):
         send_url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages"
         headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}", "Content-Type": "application/json"}
         payload = {
-        "message_product": "whatsapp", "to": to,
+        "messaging_product": "whatsapp", "to": to,
         "type": "image", "image": {"id": media_id, "caption": caption}
         }
         r = requests.post(send_url, headers=headers, json=payload)
