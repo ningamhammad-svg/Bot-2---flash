@@ -80,7 +80,7 @@ def tuma_picha_local(to, file_path, caption=""):
         with open(file_path, 'rb') as f:
             file = {'file': (os.path.basename(file_path), f, 'image/jpeg')}
             data = {'message_products': 'whatsapp', 'text': 'image.jpeg'}
-            upload_res = requests.post(upload_url, headers=headers, file=file, data=data)
+            upload_res = requests.post(upload_url, headers=headers, files=file, data=data)
         media_id =  upload_res.json().get("id")
         print(f"UPLOAD:{upload_res.text}")
         if not media_id:
