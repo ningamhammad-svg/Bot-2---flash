@@ -149,7 +149,7 @@ def webhook():
                                 msg_body = msg.get("text", {}).get("body", "")
                                 if not msg_body:
                                     continue
-                                msg_lower = msg_body.lower()
+                                lower = msg_body.lower()
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
                                 keywords = ["location", "Google", "map","ziko","duka","mnako","mko","patikana","address","link", "ramani",
                                             "mko wapi", "mnakopatikana", "mko wapi", "duka liko wapi", "mahali mlipo" "ofisi zenu", "kufika",
