@@ -91,11 +91,11 @@ def tuma_picha_local(to, file_path, caption=""):
         payload = {
         "message_product": "whatsapp", "to": to,
         "type": "image", "image": {"id": media_id, "caption": caption}
-       }
-       r = requests.post(send_url, headers=headers_json, json=payload)
-       print(f"SEND IMAGE: {r.text}")
+        }
+        r = requests.post(send_url, headers=headers_json, json=payload)
+        print(f"SEND IMAGE: {r.text}")
     except Exception as e:
-       print(f"ERROR TUMA LOCAL: {e}")
+        print(f"ERROR TUMA LOCAL: {e}")
 
 app = Flask(__name__)
 proccessed_message = set()
