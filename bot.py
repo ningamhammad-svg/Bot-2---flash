@@ -98,6 +98,11 @@ def webhook():
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
                                 reply = get_ai_reply(msg_body)
                                 send_whatsapp_reply(from_num, reply)
+                                if "duka liko wapi" in msg_body.lower() or "Location" in msg_body.lower(): 
+                                    tuma_location(from_num)
+                                else:
+                                    reply = get_ai_reply(msg_body)
+                                    send_whatsapp_reply(from_num, reply)
     except Exception as e:
              print(f"ERROR: {e}")     
     return "OK", 200                  
