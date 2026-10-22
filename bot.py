@@ -55,7 +55,19 @@ def send_whatsapp_reply(to, text):
     r = requests.post(url, headers=headers, json=payload)
     print(f"SEND REPLY STATUS: {r.status_code} - {r.text}")
     return r
-
+def tuma_location(to):
+     url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages"
+    headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}", "Content-Type": "application/json"}
+    payload = {"messaging_product": "whatsapp", "to": to, "type": "text", "text": "location",
+                                                                                  "location":{
+                                                                                      "latitude": -6.7924,
+                                                                                      "longitude": 39.2083,
+                                                                                      "name": "NINGA TELLEPHONE ACCESSORIES - Kariakoo",
+                                                                                      "address": "Mtaa wa Agrey & Likoma"
+                                                                                      
+                                                                                  }}
+r = requests.post(url, headers=headers, json=payload)
+    print("Location imetumwa!")
 app = Flask(__name__)
 VERIFY_TOKEN = os.getenv("VERIFY_TOKEN", "NEGRO343")
 WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN")
