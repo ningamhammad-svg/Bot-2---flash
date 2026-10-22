@@ -98,6 +98,8 @@ def webhook():
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
                                 reply = get_ai_reply(msg_body)
                                 send_whatsapp_reply(from_num, reply)
+                                msg_lower = msg_body.lower()
+                                print(f"MESSAGE FROM {from_num}: {msg_body}")
                                 keywords = ["location", "Google", "map", "ramani", "mko wapi", "mnakopatikana", "mko wapi", "duka liko wapi", "mahali" "ofisi", "kufika"]
                                 if any(k in msg_lower for k in keywords):
                                     print(">>>NINATUMA LOCATION<<<")
