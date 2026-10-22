@@ -76,7 +76,7 @@ def download_whatsapp_media(media_id):
 def tuma_picha_local(to, file_path, caption=""):
     try:
         upload_url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/media"
-    headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
+        headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
     with open(file_path, 'rb') as f:
         file = {'file': (os.path.basename(file_path), f, 'image/jpeg')}
         data = {'message_products': 'whatsapp', 'text': 'image.jpeg'}
