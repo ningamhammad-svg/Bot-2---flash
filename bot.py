@@ -96,8 +96,7 @@ def webhook():
                             msg_body = msg.get("text", {}).get("body", "")
                             if msg_body:
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
-                                reply = get_ai_reply(msg_body)
-                                send_whatsapp_reply(from_num, reply)
+                               
                                 msg_lower = msg_body.lower()
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
                                 keywords = ["location", "Google", "map", "ramani", "mko wapi", "mnakopatikana", "mko wapi", "duka liko wapi", "mahali mlipo" "ofisi zenu", "kufika"]
