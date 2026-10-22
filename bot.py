@@ -77,25 +77,25 @@ def tuma_picha_local(to, file_path, caption=""):
     try:
         upload_url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/media"
         headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
-    with open(file_path, 'rb') as f:
-        file = {'file': (os.path.basename(file_path), f, 'image/jpeg')}
-        data = {'message_products': 'whatsapp', 'text': 'image.jpeg'}
-        upload_res = requests.post(upload_url, headers=headers, file=file, data=data)
-   media_id =  upload_res.json().get("id")
-   print(f"UPLOAD:{upload_res.text}")
-   if not media_id:
-        print(f"UPLOAD FAILED:{upload_res.text}")
-        return
-   send_url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages"
-   headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}", "Content-Type": "application/json"}
-   payload = {
+        with open(file_path, 'rb') as f:
+            file = {'file': (os.path.basename(file_path), f, 'image/jpeg')}
+            data = {'message_products': 'whatsapp', 'text': 'image.jpeg'}
+            upload_res = requests.post(upload_url, headers=headers, file=file, data=data)
+        media_id =  upload_res.json().get("id")
+        print(f"UPLOAD:{upload_res.text}")
+        if not media_id:
+            print(f"UPLOAD FAILED:{upload_res.text}")
+            return
+       send_url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages"
+       headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}", "Content-Type": "application/json"}
+       payload = {
         "message_product": "whatsapp", "to": to,
         "type": "image", "image": {"id": media_id, "caption": caption}
-    }
-   r = requests.post(send_url, headers=headers_json, json=payload)
-   print(f"SEND IMAGE: {r.text}")
-except Exception as e:
-   print(f"ERROR TUMA LOCAL: {e}")
+       }
+       r = requests.post(send_url, headers=headers_json, json=payload)
+       print(f"SEND IMAGE: {r.text}")
+    except Exception as e:
+       print(f"ERROR TUMA LOCAL: {e}")
 
 app = Flask(__name__)
 proccessed_message = set()
