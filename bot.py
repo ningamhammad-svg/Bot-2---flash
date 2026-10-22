@@ -141,7 +141,7 @@ def webhook():
                             msg_body = msg.get("text", {}).get("body", "")
                             if msg_body:
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
-                               msg_id = msg.get("id")
+                                msg_id = msg.get("id")
                                 if is_duplicate(msg_id):
                                     print(f"DUPLICATE IMEZUIWA: {msg_id}")
                                     continue
