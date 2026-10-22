@@ -105,19 +105,6 @@ def webhook():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
-def tuma_location(client, chat_id):
-    latitude = -6.7924
-    longitude = 39.2083
-    shop_name = "NINGA TELLEPHONE ACCESSORIES - Kariakoo"
-    address = "Mtaa wa Agrey na Likoma"
-    client.send_location(
-        chat_id=chat_id,
-        latitude=latitude,
-        longitude=longitude,
-        name=shop_name,
-        address=address
-    )
-    print("Location imetumwa!")
 
 if "duka liko wapi" in ujumbe_mteja.lower() or "Location" in ujumbe_mteja.lower():
     send_location(client, chat_id)
