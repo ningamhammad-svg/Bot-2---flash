@@ -99,7 +99,9 @@ def webhook():
                                
                                 msg_lower = msg_body.lower()
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
-                                keywords = ["location", "Google", "map","ziko","duka","mnako","mko","patikana","address","link", "ramani", "mko wapi", "mnakopatikana", "mko wapi", "duka liko wapi", "mahali mlipo" "ofisi zenu", "kufika"]
+                                keywords = ["location", "Google", "map","ziko","duka","mnako","mko","patikana","address","link", "ramani",
+                                            "mko wapi", "mnakopatikana", "mko wapi", "duka liko wapi", "mahali mlipo" "ofisi zenu", "kufika",
+                                           "where","locate","located","pin","come","direction","find you","office","shop"]
                                 if any(k in msg_lower for k in keywords):
                                     print(">>>NINATUMA LOCATION<<<")
                                     tuma_location(from_num)
