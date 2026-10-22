@@ -36,6 +36,7 @@ SYSTEM_PROMPT = """
      4.Kumbuka mteja alichosema hapo awali.
      5.usimsumbue mteja kwa kumtumia message nyingi kwa wakati mmoja.
      6.usimtumie message mteja kama hajakutafuta mwenyewe.
+     7.usitume message nyinyi kwa wakati mmoja
      """
 def get_ai_reply(user_message):
     try:
@@ -61,8 +62,40 @@ def send_whatsapp_reply(to, text):
     r = requests.post(url, headers=headers, json=payload)
     print(f"SEND REPLY STATUS: {r.status_code} - {r.text}")
     return r
+def download_whatsapp_media(media_id):
+    try:
+        url = f"https://graph.facebook.com/v20.0/{media_id}"
+        headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
+        r = requests.get(url, headers=headers)
+        media_url = r.json().get("url")
+        r2 = requests.get(url, headers=headers)
+        return r2.content
+    except Exception as e:
+        print(f"ERROR DOWNLOAD:N{e}")
+        return None
+def tuma_picha_local(to, file_path, caption=""):
+    try:
+        upload_url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/media"
+    headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
+    with open(file_path, 'rb') as f:
+        file = {'file': (os.path.basename(file_path), f, 'image/jpeg')}
+        data = {'message_products': 'whatsapp', 'text': 'image.jpeg'}
+        upload_res = requests.post(upload_url, headers=headers, file=file, data=data)
+   media_id =  upload_res.json().get("id")
+   if not media_id:
+   print(f"UPLOAD FAILED:{upload_res.text}")
+   return
+   send_url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages"
+    headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}", "Content-Type": "application/json"}
+    payload = {
+        "message_product": "whatsapp", "to": to,
+        "type": "image", "image": {"id": media_id, "caption": caption}
+    }
+r = requests.post(send_url, headers=headers_json, json=payload)
+print(f"ERROR TUMA LOCAL: {e}")
 app = Flask(__name__)
 proccessed_message = set()
+PRODUCTS_FOLDER = "products"
 def is_duplicate(message_id):
     if message_id in processed_message:
         return True
@@ -120,6 +153,10 @@ def webhook():
                                 if any(k in msg_lower for k in keywords):
                                     print(">>>NINATUMA LOCATION<<<")
                                     tuma_location(from_num)
+                                elif "iPhone" in lower:
+                                    tuma_picha_local(from_num, "products/iPhone.jpg", "iPhone Pro Max - Tsh. 780k, Original na warranty")
+                                elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
+                                    tuma_picha_local(from_num, "products/iPhone.jpg", "Hizi hapa bidhaa zetu maarufu")
                                 else:
                                     reply = get_ai_reply(msg_body)
                                     send_whatsapp_reply(from_num, reply)
