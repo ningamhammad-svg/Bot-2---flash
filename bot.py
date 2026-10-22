@@ -104,7 +104,7 @@ def is_duplicate(message_id):
     if message_id in processed_message:
         return True
     processed_message.add(message_id)
-    if len(processed_message) >100
+    if len(processed_message) >100:
         processed_message.pop()
     return False
 VERIFY_TOKEN = os.getenv("VERIFY_TOKEN", "NEGRO343")
