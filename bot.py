@@ -154,7 +154,7 @@ def webhook():
                                 keywords = ["location", "Google", "map","ziko","duka","mnako","mko","patikana","address","link", "ramani",
                                             "mko wapi", "mnakopatikana", "mko wapi", "duka liko wapi", "mahali mlipo" "ofisi zenu", "kufika",
                                            "where","locate","located","pin","come","direction","find you","office","shop"]
-                                if any(k in msg_lower for k in keywords):
+                                if any(k in lower for k in keywords):
                                     print(">>>NINATUMA LOCATION<<<")
                                     tuma_location(from_num)
                                 elif "iPhone" in lower:
