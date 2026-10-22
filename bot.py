@@ -78,7 +78,7 @@ def tuma_picha_local(to, file_path, caption=""):
         upload_url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/media"
         headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
         with open(file_path, 'rb') as f:
-            files = {'files': (os.path.basename(file_path), f, 'image/jpeg')}
+            files = {'file': (os.path.basename(file_path), f, 'image/jpeg')}
             data = {'message_product': 'whatsapp', 'type': 'image.jpeg'}
             upload_res = requests.post(upload_url, headers=headers, files=files, data=data)
         media_id =  upload_res.json().get("id")
