@@ -106,5 +106,3 @@ def webhook():
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
 
-if "duka liko wapi" in ujumbe_mteja.lower() or "Location" in ujumbe_mteja.lower():
-    send_location(client, chat_id)
