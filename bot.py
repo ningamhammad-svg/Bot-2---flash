@@ -86,9 +86,9 @@ def tuma_picha_local(to, file_path, caption=""):
         if not media_id:
             print(f"UPLOAD FAILED:{upload_res.text}")
             return
-       send_url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages"
-       headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}", "Content-Type": "application/json"}
-       payload = {
+        send_url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages"
+        headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}", "Content-Type": "application/json"}
+        payload = {
         "message_product": "whatsapp", "to": to,
         "type": "image", "image": {"id": media_id, "caption": caption}
        }
