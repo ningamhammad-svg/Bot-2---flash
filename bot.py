@@ -82,17 +82,21 @@ def tuma_picha_local(to, file_path, caption=""):
         data = {'message_products': 'whatsapp', 'text': 'image.jpeg'}
         upload_res = requests.post(upload_url, headers=headers, file=file, data=data)
    media_id =  upload_res.json().get("id")
+   print(f"UPLOAD:{upload_res.text}")
    if not media_id:
-   print(f"UPLOAD FAILED:{upload_res.text}")
-   return
+        print(f"UPLOAD FAILED:{upload_res.text}")
+        return
    send_url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages"
-    headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}", "Content-Type": "application/json"}
-    payload = {
+   headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}", "Content-Type": "application/json"}
+   payload = {
         "message_product": "whatsapp", "to": to,
         "type": "image", "image": {"id": media_id, "caption": caption}
     }
-r = requests.post(send_url, headers=headers_json, json=payload)
-print(f"ERROR TUMA LOCAL: {e}")
+   r = requests.post(send_url, headers=headers_json, json=payload)
+   print(f"SEND IMAGE: {r.text}")
+except Exception as e:
+   print(f"ERROR TUMA LOCAL: {e}")
+
 app = Flask(__name__)
 proccessed_message = set()
 PRODUCTS_FOLDER = "products"
