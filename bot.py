@@ -98,7 +98,7 @@ def tuma_picha_local(to, file_path, caption=""):
         print(f"ERROR TUMA LOCAL: {e}")
 
 app = Flask(__name__)
-proccessed_message = set()
+processed_message = set()
 PRODUCTS_FOLDER = "products"
 def is_duplicate(message_id):
     if message_id in processed_message:
