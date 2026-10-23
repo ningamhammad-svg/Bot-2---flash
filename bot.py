@@ -155,7 +155,7 @@ def webhook():
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")
                             if  from_num == OWNER_NUMBER:
-                                clean_body == "0":
+                                clean_body == "0"
                                 set_bot_state(False)
                                 send_whatsapp_reply(from_num, "BOT IMEZIMWA!")
                                 continue
