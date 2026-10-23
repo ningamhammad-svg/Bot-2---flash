@@ -98,20 +98,8 @@ def tuma_picha_local(to, file_path, caption=""):
     except Exception as e:
         print(f"ERROR TUMA LOCAL: {e}")
 OWNER_NUMBER ="+255 780244426"
-BOT_STATE_LIFE = "bot_state.json"
-def is_bot_enabled():
-    if not os.path.exists(BOT_STATE_LIFE):
-        return True
-    try:
-        with open(BOT_STATE_LIFE, "r") as f:
-            data = json.load(f)
-            return data.get("enabled", True)
-except Exception as e:
-    return True
-def set_bot_state(enabled: bool):
-    with open(BOT_STATE_LIFE, "w") as f:
-        json.dump({"enabled": enabled}. f)
-        
+BOT_STATE_LIFE = True
+
 app = Flask(__name__)
 processed_message = set()
 PRODUCTS_FOLDER = "products"
@@ -153,20 +141,21 @@ def webhook():
                     if messages:
                         for msg in messages:
                             from_num = msg.get("from")
-                            msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")
-                            if  from_num == OWNER_NUMBER:
-                                clean_body == "0"
-                                set_bot_state(False)
-                                send_whatsapp_reply(from_num, "BOT IMEZIMWA!")
+                            msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")or ""
+                            global BOT_ENABLED 
+                            if from_num == OWNER_NUMBER: 
+                                if msg_body.strip() == "0":
+                                BOT_ENABLED = False 
+                                send_whatsapp_reply(from_num, "✅ Bot IMEZIMWA. Sasa wewe ndiye unajibu. Tuma 1 kuiwasha.")
                                 continue
-                            elif clean_body == "1":
-                                set_bot_state(True)
-                                send_whatsapp_reply(from_num, "BOT IMEWASHWA!")
-                                continue
-                            if not is_bot_enabled():
-                                if from_num != OWNER_NUMBER:
-                                    print(f"BOT PAUSE: skipping {from_num}, owner is talking")
+                            elif msg_body.strip() == "1":
+                                BOT_ENABLED = True 
+                                send_whatsapp_reply(from_num, "✅ Bot IMEWASHWA.")
+                                continue 
+                            if not BOT_ENABLED and from_num != OWNER_NUMBER:
+                                    print(f"BOT PAUSED: skip {from_num}")
                                     continue
+    
                             if msg_body:
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
                                 msg_id = msg.get("id")
