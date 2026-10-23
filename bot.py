@@ -97,10 +97,12 @@ def tuma_picha_local(to, file_path, caption=""):
         print(f"SEND IMAGE: {r.text}")
     except Exception as e:
         print(f"ERROR TUMA LOCAL: {e}")
+
+
+app = Flask(__name__)
 OWNER_NUMBER ="+255 780244426"
 BOT_ENABLED = True
 
-app = Flask(__name__)
 processed_message = set()
 PRODUCTS_FOLDER = "products"
 def is_duplicate(message_id):
