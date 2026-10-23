@@ -148,7 +148,7 @@ def webhook():
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
                                 if not msg_body and msg_get("image"):
-                                    msg_body = msg.get("image", {}).get("caption", "")
+                                    msg_body = msg.get("image", {}).get("caption", "Hii simu ipo?")
     
                                 lower = msg_body.lower()
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
