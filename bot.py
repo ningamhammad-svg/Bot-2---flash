@@ -98,7 +98,7 @@ def tuma_picha_local(to, file_path, caption=""):
     except Exception as e:
         print(f"ERROR TUMA LOCAL: {e}")
 OWNER_NUMBER ="+255 780244426"
-BOT_STATE_LIFE = True
+BOT_ENABLED = True
 
 app = Flask(__name__)
 processed_message = set()
