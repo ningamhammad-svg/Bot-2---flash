@@ -145,16 +145,16 @@ def webhook():
                             global BOT_ENABLED 
                             if from_num == OWNER_NUMBER: 
                                 if msg_body.strip() == "0":
-                                BOT_ENABLED = False 
-                                send_whatsapp_reply(from_num, "✅ Bot IMEZIMWA. Sasa wewe ndiye unajibu. Tuma 1 kuiwasha.")
-                                continue
+                                    BOT_ENABLED = False 
+                                    send_whatsapp_reply(from_num, "✅ Bot IMEZIMWA. Sasa wewe ndiye unajibu. Tuma 1 kuiwasha.")
+                                    continue
                             elif msg_body.strip() == "1":
                                 BOT_ENABLED = True 
                                 send_whatsapp_reply(from_num, "✅ Bot IMEWASHWA.")
                                 continue 
                             if not BOT_ENABLED and from_num != OWNER_NUMBER:
-                                    print(f"BOT PAUSED: skip {from_num}")
-                                    continue
+                                print(f"BOT PAUSED: skip {from_num}")
+                                continue
     
                             if msg_body:
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
