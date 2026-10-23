@@ -149,7 +149,7 @@ def webhook():
                                 msg_body = msg.get("text", {}).get("body", "")
                                 if not msg_body and msg_get("image"):
                                     msg_body = msg.get("image", {}).get("caption", "")
-                                    continue
+    
                                 lower = msg_body.lower()
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
                                 keywords = ["location", "Google", "map","ziko","duka","mnako","mko","patikana","address","link", "ramani",
