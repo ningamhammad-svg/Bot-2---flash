@@ -151,8 +151,7 @@ def webhook():
                                 if not msg_body and msg.get("image"):
                                     msg_body = msg.get("image", {}).get("caption", "")
                                     image_id = msg.get("image", {}).get("id")
-                                if msg.get("image"):
-                                    reply = get_ai_reply_with_image(image_id, msg_body)
+                               
                                 lower = msg_body.lower()
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
                                 keywords = ["location", "Google", "map","ziko","duka","mnako","mko","patikana","address","link", "ramani",
