@@ -106,8 +106,8 @@ def is_bot_enabled():
         with open(BOT_STATE_LIFE, "r") as f:
             data = json.load(f)
             return data.get("enabled", True)
-    except:
-        return True
+except:
+    return True
 def set_bot_state(enabled: bool):
     with open(BOT_STATE_LIFE, "w") as f:
         json.dump({"enabled": enabled}. f)
