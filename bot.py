@@ -63,6 +63,21 @@ def send_whatsapp_reply(to, text):
     r = requests.post(url, headers=headers, json=payload)
     print(f"SEND REPLY STATUS: {r.status_code} - {r.text}")
     return r
+def tuma_alert_kwa_mmiliki(customer_num, customer_msg, aina):
+    """
+    aina = "ORDER" au "SHIDA"
+    """
+    try:
+        if aina == "ORDER":
+            text = f"🚨 *ORDER MPYA!* 🚨\n\n👤 Mteja: {customer_num}\n📝 Alisema: {customer_msg}\n\nMwangalie haraka kwenye WhatsApp!"
+        else:
+            text = f"⚠️ *SHIDA / MALALAMIKO* ⚠️\n\n👤 Mteja: {customer_num}\n❗ Tatizo: {customer_msg}\n\nInahitaji msaada wako."
+
+        send_whatsapp_reply(OWNER_NUMBER, text)
+        print(f">>> ALERT IMETUMWA KWA MMILIKI: {aina} kutoka {customer_num}")
+    except Exception as e:
+        print(f"ERROR ALERT MMILIKI: {e}")
+
 def download_whatsapp_media(media_id):
     try:
         url = f"https://graph.facebook.com/v20.0/{media_id}"
@@ -113,6 +128,7 @@ VERIFY_TOKEN = os.getenv("VERIFY_TOKEN", "NEGRO343")
 WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN")
 PHONE_NUMBER_ID = os.getenv("PHONE_NUMBER_ID")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+OWNER_NUMBER = os.getenv("OWNER_NUMBER", "255780244426")
 @app.route("/")
 def home():
     return "Ninga Bot is Live! ✅", 200
@@ -156,6 +172,15 @@ def webhook():
                                
                                 lower = msg_body.lower()
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
+                                order_keywords = ["order", "nitanunua", "namuhitaji boss", "nahitaji delivery", "nataka", "ninataka", "naomba", "nauza", "bei", "nitalipa", 
+                                                  "nimeshalipa", "lipa", "nunua", "book", "agiza"] 
+                                shida_keywords = ["shida", "haifanyi", "mbovu", "tatizo", "imekataa", "malalamiko", "mwizi", "haijafika",
+                                                  "complaint", "help"]
+                                if any(k in lower for k in order_keywords):
+                                    tuma_alert_kwa_mmiliki(from_num, msg_body, "ORDER") 
+                                elif any(k in lower for k in shida_keywords):
+                                    tuma_alert_kwa_mmiliki(from_num, msg_body, "SHIDA") 
+                                
                                 keywords = ["location", "Google", "map","ziko","duka","mnako","mko","patikana","address","link", "ramani",
                                             "mko wapi", "mnakopatikana", "mko wapi", "duka liko wapi", "mahali mlipo" "ofisi zenu", "kufika",
                                            "where","locate","located","pin","come","direction","find you","office","shop"]
