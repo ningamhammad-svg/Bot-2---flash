@@ -100,9 +100,6 @@ def tuma_picha_local(to, file_path, caption=""):
 
 
 app = Flask(__name__)
-OWNER_NUMBER ="+255 780244426"
-BOT_ENABLED = True
-
 processed_message = set()
 PRODUCTS_FOLDER = "products"
 def is_duplicate(message_id):
@@ -143,19 +140,7 @@ def webhook():
                     if messages:
                         for msg in messages:
                             from_num = msg.get("from")
-                            msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")or ""
-                            global BOT_ENABLED 
-                            if from_num == OWNER_NUMBER: 
-                                if msg_body.strip() == "0":
-                                    BOT_ENABLED = False 
-                                    send_whatsapp_reply(from_num, "✅ Bot IMEZIMWA. Sasa wewe ndiye unajibu. Tuma 1 kuiwasha.")
-                                    continue
-                            elif msg_body.strip() == "1":
-                                BOT_ENABLED = True 
-                                send_whatsapp_reply(from_num, "✅ Bot IMEWASHWA.")
-                                continue 
-                            if not BOT_ENABLED and from_num != OWNER_NUMBER:
-                                print(f"BOT PAUSED: skip {from_num}")
+                            msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")
                                 continue
     
                             if msg_body:
