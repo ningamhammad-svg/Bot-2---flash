@@ -141,7 +141,7 @@ def webhook():
                         for msg in messages:
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")
-                                continue
+                                    continue
     
                             if msg_body:
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
