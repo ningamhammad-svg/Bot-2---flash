@@ -206,8 +206,7 @@ def webhook():
     except Exception as e:
              print(f"ERROR: {e}")     
     return "OK", 200  
-
-app.route('/admin/<business_id>')
+@app.route('/admin/<business_id>')
 def admin_panel(business_id):
     token = request.args.get("token")
     if token != VERIFY_TOKEN:
@@ -215,24 +214,16 @@ def admin_panel(business_id):
     
     data = {}
     if os.path.exists(CHATS_FILE):
-        try:
-            with open(CHATS_FILE, 'r') as f:
-                data = json.load(f)
-        except:
-            data = {}
+        with open(CHATS_FILE, 'r') as f:
+            data = json.load(f)
     
     control = get_control_data()
+    
     all_chats = data.get(business_id, {})
-    if len(all_chats) == 0 and data:
-        for k in data:
-            if isinstance(data[k], dict):
-                for num, msgs in data[k].items():
-                    if num not in all_chats:
-                        all_chats[num] = msgs
-        if len(all_chats) == 0:
-            all_chats = data
+    return f"<html><body><h1>NCIP ADMIN - {business_id}</h1><p>Wateja: {len(all_chats)}</p><p>Paused: {control.get('paused_customers', [])}</p><pre>{str(all_chats)[:5000]}</pre></body></html>"
+@app.route('/admin/<business_id>/control')
 
-    html = f"""
+     html = f'''
     <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
     body{{margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,sans-serif}}
@@ -264,7 +255,7 @@ def admin_panel(business_id):
       <div class="stat"><b>{sum(len(v) if isinstance(v,list) else 0 for v in all_chats.values())}</b><span>JUMLA MSGS</span></div>
     </div>
     <div class="container">
-    """
+    '''
 
     if len(all_chats) == 0:
         html += f"<div style='background:white;border-radius:16px;padding:40px;text-align:center;color:#94a3b8'>Hakuna chat bado<br><small style='font-size:11px'>Keys: {list(data.keys())}</small></div>"
@@ -347,68 +338,3 @@ def save_chat(business_id, customer_num, role, message):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
-    ADMIN_TEMPLATE = """
-    html = f '''
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NCIP ADMIN</title>
-<style>
-body{font-family:system-ui;background:#0f172a;color:white;margin:0;padding:12px}
-.top{background:linear-gradient(90deg,#ff8a00,#2563eb);padding:18px;border-radius:16px;text-align:center}
-.card{background:#1e293b;border-radius:16px;padding:14px;margin:14px 0;border-left:6px solid #22c55e}
-.card.paused{border-left-color:#ef4444;background:#2a1a1a}
-.bubble{padding:10px 14px;border-radius:18px;margin:6px 0;max-width:85%;font-size:14px;line-height:1.3}
-.cust{background:#dbeafe;color:#000}
-.bot{background:#dcfce7;color:#000;margin-left:auto}
-.btn{padding:10px 16px;border-radius:24px;text-decoration:none;display:inline-block;margin:5px;font-weight:bold;font-size:13px}
-.pause{background:#ef4444;color:white}
-.resume{background:#22c55e;color:white}
-.wa{background:#25D366;color:white}
-.meta{font-size:11px;color:#94a3b8;margin-top:4px}
-</style>
-</head>
-<body>
-<div class="top">
-<h2 style="margin:0">NCIP DIGITAL - ADMIN</h2>
-<small>{{ business_id }} | Token: {{ token }}</small>
-<div style="margin-top:8px">
-<span style="background:rgba(0,0,0,0.2);padding:6px 12px;border-radius:20px">Wateja: {{ total }} | Paused: {{ paused_list|length }}</span>
-</div>
-</div>
-
-{% if total == 0 %}
-<div style="text-align:center;padding:40px;color:#94a3b8">
-<h3>Hakuna chat bado</h3>
-<p>Chats zitaonekana hapa mteja akituma WhatsApp<br>File inasoma keys: {{ all_keys }}</p>
-</div>
-{% endif %}
-
-{% for number, msgs in all_chats.items() %}
-<div class="card {% if number in paused_list %}paused{% endif %}">
-<h3 style="margin:0">👤 {{ number }}</h3>
-<div style="margin:8px 0">
-{% if number in paused_list %}
-<span style="background:#ef444422;color:#ef4444;padding:6px 10px;border-radius:10px;font-size:12px">😴 BOT AMELALA</span>
-<a class="btn resume" href="/admin/{{ business_id }}/control?token={{ token }}&action=resume&customer={{ number }}">☀️ AMSHA</a>
-{% else %}
-<span style="background:#22c55e22;color:#22c55e;padding:6px 10px;border-radius:10px;font-size:12px">✅ BOT ANAJIBU</span>
-<a class="btn pause" href="/admin/{{ business_id }}/control?token={{ token }}&action=pause&customer={{ number }}">😴 LALA</a>
-{% endif %}
-<a class="btn wa" href="https://wa.me/{{ number }}" target="_blank">💬 JIBU WA</a>
-</div>
-<hr style="border:none;border-top:1px solid #334155;margin:10px 0">
-{% for m in msgs[-20:] %}
-<div class="bubble {{ 'cust' if m.role=='customer' else 'bot' }}">
-<b>{{ m.role }}:</b> {{ m.msg }}
-<div class="meta">{{ m.time }}</div>
-</div>
-{% endfor %}
-</div>
-{% endfor %}
-
-</body>
-</html>
-'''
-"""
