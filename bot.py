@@ -344,7 +344,7 @@ def save_chat(business_id, customer_num, role, message):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
-    ADMIN_TEMPLATE = 
+    ADMIN_TEMPLATE = """
     html = f '''
 <!DOCTYPE html>
 <html>
@@ -377,3 +377,4 @@ body{font-family:sans-serif;background:#0f172a;color:white;margin:0;padding:10px
 </div>
 <h3 style="text-align:center">Wateja: """ + str(len(all_chats)) + """</h3>
 '''
+"""
