@@ -207,7 +207,7 @@ def webhook():
              print(f"ERROR: {e}")     
     return "OK", 200  
 
-@app.route('/admin/<business_id>')
+app.route('/admin/<business_id>')
 def admin_panel(business_id):
     token = request.args.get("token")
     if token != VERIFY_TOKEN:
@@ -215,69 +215,78 @@ def admin_panel(business_id):
     
     data = {}
     if os.path.exists(CHATS_FILE):
-        with open(CHATS_FILE, 'r') as f:
-            data = json.load(f)
+        try:
+            with open(CHATS_FILE, 'r') as f:
+                data = json.load(f)
+        except:
+            data = {}
     
     control = get_control_data()
-    
     all_chats = data.get(business_id, {})
-    return f"<html><body><h1>NCIP ADMIN - {business_id}</h1><p>Wateja: {len(all_chats)}</p><p>Paused: {control.get('paused_customers', [])}</p><pre>{str(all_chats)[:5000]}</pre></body></html>"
-@app.route('/admin/<business_id>/control')
-def admin_control(business_id):
-    token = request.args.get("token")
-    action = request.args.get("action")
-    customer = request.args.get("customer")
-    
-    if token != VERIFY_TOKEN:
-        return {"error": "token si sahihi"}, 403
-    
-    control = get_control_data()
-    
-    if action == "pause":
-        pause_bot_for_customer(customer)
-        return {"message": f"😴 Bot amelalazwa kwa {customer}. Sasa wewe ongea nae!"}
-    
-    elif action == "resume":
-        resume_bot_for_customer(customer)
-        return {"message": f"☀️ Bot ameamshwa kwa {customer}. Ataanza kujibu."}
-    
-    elif action == "pause_global":
-        control["global_pause"] = True
-        save_control_data(control)
-        return {"message": "😴 BOT AMELALA GLOBAL - Hajibu mtu yeyote!"}
-    
-    elif action == "resume_global":
-        control["global_pause"] = False
-        save_control_data(control)
-        return {"message": "☀️ BOT AMEAMKA GLOBAL - Anajibu wote!"}
-    
-    return {"error": "action haijulikani"}, 400
+    if len(all_chats) == 0 and data:
+        for k in data:
+            if isinstance(data[k], dict):
+                for num, msgs in data[k].items():
+                    if num not in all_chats:
+                        all_chats[num] = msgs
+        if len(all_chats) == 0:
+            all_chats = data
 
-# === 4. FUNCTION YA KUTUMA ADMIN LINK KWA MFANYABIASHARA ===
-def tuma_admin_link_kwa_mfanyabiashara(owner_whatsapp_number):
-    """Tuma link kwa mfanyabiashara baada ya kununua bot"""
-    # Badilisha YOUR_DOMAIN na domain yako halisi
-    YOUR_DOMAIN = "https://yourdomain.com"  # mfano https://ncip.onrender.com
-    link = f"{YOUR_DOMAIN}/admin/{PHONE_NUMBER_ID}?token={VERIFY_TOKEN}"
+    html = f"""
+    <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    body{{margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,sans-serif}}
+    .header{{background:#111827;color:white;padding:20px;text-align:center}}
+    .header h1{{margin:0;font-size:18px;letter-spacing:1px}}
+    .stats{{display:flex;gap:10px;padding:12px}}
+    .stat{{flex:1;background:white;border-radius:12px;padding:12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.1)}}
+    .stat b{{display:block;font-size:20px}}
+    .stat span{{font-size:12px;color:#64748b}}
+    .container{{padding:12px}}
+    .card{{background:white;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:4px solid #10b981}}
+    .card.paused{{border-left-color:#ef4444}}
+    .card-top{{display:flex;justify-content:space-between;align-items:center}}
+    .num{{font-weight:700;font-size:15px}}
+    .badge{{font-size:11px;padding:4px 10px;border-radius:20px}}
+    .badge.on{{background:#dcfce7;color:#166534}} .badge.off{{background:#fee2e2;color:#991b1b}}
+    .actions{{margin:10px 0;display:flex;gap:8px}}
+    .btn{{flex:1;text-align:center;padding:10px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;color:white}}
+    .btn-pause{{background:#ef4444}} .btn-resume{{background:#10b981}} .btn-wa{{background:#111827}}
+    .chat-box{{background:#f8fafc;border-radius:12px;padding:10px;margin-top:10px;max-height:300px;overflow-y:auto}}
+    .msg{{padding:8px 12px;border-radius:14px;margin:6px 0;font-size:13px;line-height:1.4;max-width:85%}}
+    .msg-c{{background:#e0f2fe;color:#0c4a6e}} .msg-b{{background:#dcfce7;color:#14532d;margin-left:auto;text-align:right}}
+    .time{{font-size:10px;color:#94a3b8;margin-top:2px}}
+    </style></head><body>
+    <div class="header"><h1>NCIP ADMIN - {business_id}</h1><small style="opacity:0.7">bot-2-flash.onrender.com</small></div>
+    <div class="stats">
+      <div class="stat"><b>{len(all_chats)}</b><span>WATEJA</span></div>
+      <div class="stat"><b>{len(control.get('paused_customers',[]))}</b><span>PAUSED</span></div>
+      <div class="stat"><b>{sum(len(v) if isinstance(v,list) else 0 for v in all_chats.values())}</b><span>JUMLA MSGS</span></div>
+    </div>
+    <div class="container">
+    """
+
+    if len(all_chats) == 0:
+        html += f"<div style='background:white;border-radius:16px;padding:40px;text-align:center;color:#94a3b8'>Hakuna chat bado<br><small style='font-size:11px'>Keys: {list(data.keys())}</small></div>"
     
-    text = f"""✅ *Hongera! Msaidizi wako wa NCIP uko tayari*
+    for num, msgs in all_chats.items():
+        is_paused = num in control.get('paused_customers', [])
+        badge = f"<span class='badge off'>😴 PAUSED</span>" if is_paused else f"<span class='badge on'>● LIVE</span>"
+        btn1 = f"<a class='btn btn-resume' href='/admin/{business_id}/control?token={token}&action=resume&customer={num}'>☀️ AMSHA BOT</a>" if is_paused else f"<a class='btn btn-pause' href='/admin/{business_id}/control?token={token}&action=pause&customer={num}'>😴 LALAZA BOT</a>"
+        
+        html += f"<div class='card {'paused' if is_paused else ''}'><div class='card-top'><span class='num'>👤 {num}</span>{badge}</div><div class='actions'>{btn1}<a class='btn btn-wa' href='https://wa.me/{num}' target='_blank'>💬 JIBU</a></div><div class='chat-box'>"
+        if isinstance(msgs, list):
+            for m in msgs[-20:]:
+                if isinstance(m, dict):
+                    role = m.get('role','')
+                    txt = m.get('msg','')
+                    tm = m.get('time','')
+                    cls = 'msg-c' if role == 'customer' else 'msg-b'
+                    html += f"<div class='msg {cls}'>{txt}<div class='time'>{role} • {tm}</div></div>"
+        html += "</div></div>"
 
-🔗 *ADMIN LINK YAKO:*
-{link}
-
-Kupitia link hii utaweza:
-1. Kuona mazungumzo yote ya bot yako na wateja LIVE
-2. Kuona bot imeishia wapi kabla ya kukuita
-3. Kujibu mteja moja kwa moja kwa kubonyeza 'Jibu kwa WhatsApp'
-
-⚠️ Usimtumie mtu yeyote link hii, ni siri yako.
-
-Karibu NCIP DIGITAL MARKET 🚀"""
-    
-    send_whatsapp_reply(owner_whatsapp_number, text)
-
-CONTROL_FILE = "bot_control.json"
-
+    html += "</div></body></html>"
+    return html
 def get_control_data():
     if os.path.exists(CONTROL_FILE):
         with open(CONTROL_FILE, 'r') as f:
