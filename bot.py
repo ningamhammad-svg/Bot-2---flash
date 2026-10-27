@@ -344,12 +344,12 @@ def save_chat(business_id, customer_num, role, message):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
-    ADMIN_TEMPLATE = """
+    ADMIN_TEMPLATE = ""
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NCIP ADMIN CONTROL</title>
+<title>NCIP ADMIN</title>
 <style>
 body{font-family:sans-serif;background:#0f172a;color:white;margin:0;padding:10px}
 .header{background:linear-gradient(90deg,#ff8a00,#2b6cb0);padding:15px;border-radius:12px;text-align:center}
@@ -359,61 +359,20 @@ body{font-family:sans-serif;background:#0f172a;color:white;margin:0;padding:10px
 .cust{background:#dbeafe}
 .bot{background:#dcfce7;margin-left:auto;text-align:right}
 .time{font-size:10px;color:gray}
-.btn{padding:10px 16px;border-radius:20px;text-decoration:none;display:inline-block;margin:4px;font-weight:bold;border:none;cursor:pointer}
+.btn{padding:10px 16px;border-radius:20px;text-decoration:none;display:inline-block;margin:4px;font-weight:bold}
 .btn-pause{background:#ef4444;color:white}
 .btn-resume{background:#22c55e;color:white}
 .btn-wa{background:#25D366;color:white}
-.btn-global{background:#f59e0b;color:black;width:100%;padding:15px;font-size:16px}
 .status{padding:8px;border-radius:10px;text-align:center;font-weight:bold;margin:10px 0}
 .status-awake{background:#22c55e22;color:#22c55e;border:1px solid #22c55e}
 .status-sleep{background:#ef444422;color:#ef4444;border:1px solid #ef4444}
 </style>
-<script>
-function controlBot(action, customer){
-  fetch(`/admin/${BUSINESS_ID}/control?token=${TOKEN}&action=${action}&customer=${customer}`)
-  .then(r=>r.json()).then(d=>{ alert(d.message); location.reload(); });
-}
-</script>
 </head>
 <body>
 <div class="header">
 <h2>NCIP - BOT CONTROL PANEL</h2>
-<p>Biashara: {{business_id}}</p>
-{% if is_global_paused %}
-<div class="status status-sleep">😴 BOT AMELALA - GLOBAL (Hajibu mtu yeyote)</div>
-<button class="btn btn-global btn-resume" onclick="controlBot('resume_global','')">☀️ AMSHA BOT KWA WOTE</button>
-{% else %}
-<div class="status status-awake">✅ BOT ANAAMKA - Anajibu</div>
-<button class="btn btn-global btn-pause" onclick="controlBot('pause_global','')">😴 LALAZA BOT KWA WOTE</button>
-{% endif %}
+<p>Biashara: """ + business_id + """</p>
+<p>Token: """ + token + """</p>
 </div>
-
-{% for cust_num, chats in all_chats.items() %}
-<div class="customer {{'paused' if cust_num in paused_list else ''}}">
-<h3>👤 {{cust_num}}</h3>
-{% if cust_num in paused_list %}
-<div class="status status-sleep">BOT AMELALA kwa huyu mteja - Wewe unaongea</div>
-<button class="btn btn-resume" onclick="controlBot('resume','{{cust_num}}')">☀️ AMSHA BOT</button>
-{% else %}
-<div class="status status-awake">BOT ANAJIBU huyu mteja</div>
-<button class="btn btn-pause" onclick="controlBot('pause','{{cust_num}}')">😴 LALAZA BOT</button>
-{% endif %}
-<a class="btn btn-wa" href="https://wa.me/{{cust_num}}" target="_blank">💬 JIBU MTEJA</a>
-
-<hr style="border-color:#334155">
-{% for c in chats[-15:] %}
-<div class="msg {{'cust' if c.role=='customer' else 'bot'}}">
-<b>{{'Mteja' if c.role=='customer' else 'Bot'}}:</b> {{c.msg}}<br>
-<span class="time">{{c.time}}</span>
-</div>
-{% endfor %}
-</div>
-{% endfor %}
-
-<script>
-const BUSINESS_ID = "{{business_id}}";
-const TOKEN = "{{token}}";
-</script>
-</body>
-</html>
-"""
+<h3 style="text-align:center">Wateja: """ + str(len(all_chats)) + """</h3>
+""
