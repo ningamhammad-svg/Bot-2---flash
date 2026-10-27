@@ -346,29 +346,60 @@ if __name__ == "__main__":
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NCIP ADMIN</title>
 <style>
-body{font-family:sans-serif;background:#0f172a;color:white;margin:0;padding:10px}
-.header{background: white;padding:15px;border-radius:12px;text-align:center}
-.customer{background:#1e293b;margin:15px 0;border-radius:12px;padding:12px;border-left:5px solid #22c55e}
-.customer.paused{border-left-color:#ef4444;background:#2a1a1a}
-.msg{padding:8px 12px;border-radius:18px;margin:5px 0;max-width:85%;color:black}
-.cust{background:#dbeafe}
-.bot{background:#dcfce7;margin-left:auto;text-align:right}
-.time{font-size:10px;color:gray}
-.btn{padding:10px 16px;border-radius:20px;text-decoration:none;display:inline-block;margin:4px;font-weight:bold}
-.btn-pause{background:#ef4444;color:white}
-.btn-resume{background:#22c55e;color:white}
-.btn-wa{background:#25D366;color:white}
-.status{padding:8px;border-radius:10px;text-align:center;font-weight:bold;margin:10px 0}
-.status-awake{background:#22c55e22;color:#22c55e;border:1px solid #22c55e}
-.status-sleep{background:#ef444422;color:#ef4444;border:1px solid #ef4444}
+body{font-family:system-ui;background:#0f172a;color:white;margin:0;padding:12px}
+.top{background:linear-gradient(90deg,#ff8a00,#2563eb);padding:18px;border-radius:16px;text-align:center}
+.card{background:#1e293b;border-radius:16px;padding:14px;margin:14px 0;border-left:6px solid #22c55e}
+.card.paused{border-left-color:#ef4444;background:#2a1a1a}
+.bubble{padding:10px 14px;border-radius:18px;margin:6px 0;max-width:85%;font-size:14px;line-height:1.3}
+.cust{background:#dbeafe;color:#000}
+.bot{background:#dcfce7;color:#000;margin-left:auto}
+.btn{padding:10px 16px;border-radius:24px;text-decoration:none;display:inline-block;margin:5px;font-weight:bold;font-size:13px}
+.pause{background:#ef4444;color:white}
+.resume{background:#22c55e;color:white}
+.wa{background:#25D366;color:white}
+.meta{font-size:11px;color:#94a3b8;margin-top:4px}
 </style>
 </head>
 <body>
-<div class="header">
-<h2>NCIP - BOT CONTROL PANEL</h2>
-<p>Biashara: """ + business_id + """</p>
-<p>Token: """ + token + """</p>
+<div class="top">
+<h2 style="margin:0">NCIP DIGITAL - ADMIN</h2>
+<small>{{ business_id }} | Token: {{ token }}</small>
+<div style="margin-top:8px">
+<span style="background:rgba(0,0,0,0.2);padding:6px 12px;border-radius:20px">Wateja: {{ total }} | Paused: {{ paused_list|length }}</span>
 </div>
-<h3 style="text-align:center">Wateja: """ + str(len(all_chats)) + """</h3>
+</div>
+
+{% if total == 0 %}
+<div style="text-align:center;padding:40px;color:#94a3b8">
+<h3>Hakuna chat bado</h3>
+<p>Chats zitaonekana hapa mteja akituma WhatsApp<br>File inasoma keys: {{ all_keys }}</p>
+</div>
+{% endif %}
+
+{% for number, msgs in all_chats.items() %}
+<div class="card {% if number in paused_list %}paused{% endif %}">
+<h3 style="margin:0">👤 {{ number }}</h3>
+<div style="margin:8px 0">
+{% if number in paused_list %}
+<span style="background:#ef444422;color:#ef4444;padding:6px 10px;border-radius:10px;font-size:12px">😴 BOT AMELALA</span>
+<a class="btn resume" href="/admin/{{ business_id }}/control?token={{ token }}&action=resume&customer={{ number }}">☀️ AMSHA</a>
+{% else %}
+<span style="background:#22c55e22;color:#22c55e;padding:6px 10px;border-radius:10px;font-size:12px">✅ BOT ANAJIBU</span>
+<a class="btn pause" href="/admin/{{ business_id }}/control?token={{ token }}&action=pause&customer={{ number }}">😴 LALA</a>
+{% endif %}
+<a class="btn wa" href="https://wa.me/{{ number }}" target="_blank">💬 JIBU WA</a>
+</div>
+<hr style="border:none;border-top:1px solid #334155;margin:10px 0">
+{% for m in msgs[-20:] %}
+<div class="bubble {{ 'cust' if m.role=='customer' else 'bot' }}">
+<b>{{ m.role }}:</b> {{ m.msg }}
+<div class="meta">{{ m.time }}</div>
+</div>
+{% endfor %}
+</div>
+{% endfor %}
+
+</body>
+</html>
 '''
 """
