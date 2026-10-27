@@ -222,41 +222,7 @@ def admin_panel(business_id):
     all_chats = data.get(business_id, {})
     return f"<html><body><h1>NCIP ADMIN - {business_id}</h1><p>Wateja: {len(all_chats)}</p><p>Paused: {control.get('paused_customers', [])}</p><pre>{str(all_chats)[:5000]}</pre></body></html>"
 @app.route('/admin/<business_id>/control')
-ADMIN_TEMPLETE = """
-html = f'''
-    <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-    body{{margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,sans-serif}}
-    .header{{background:#111827;color:white;padding:20px;text-align:center}}
-    .header h1{{margin:0;font-size:18px;letter-spacing:1px}}
-    .stats{{display:flex;gap:10px;padding:12px}}
-    .stat{{flex:1;background:white;border-radius:12px;padding:12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.1)}}
-    .stat b{{display:block;font-size:20px}}
-    .stat span{{font-size:12px;color:#64748b}}
-    .container{{padding:12px}}
-    .card{{background:white;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:4px solid #10b981}}
-    .card.paused{{border-left-color:#ef4444}}
-    .card-top{{display:flex;justify-content:space-between;align-items:center}}
-    .num{{font-weight:700;font-size:15px}}
-    .badge{{font-size:11px;padding:4px 10px;border-radius:20px}}
-    .badge.on{{background:#dcfce7;color:#166534}} .badge.off{{background:#fee2e2;color:#991b1b}}
-    .actions{{margin:10px 0;display:flex;gap:8px}}
-    .btn{{flex:1;text-align:center;padding:10px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;color:white}}
-    .btn-pause{{background:#ef4444}} .btn-resume{{background:#10b981}} .btn-wa{{background:#111827}}
-    .chat-box{{background:#f8fafc;border-radius:12px;padding:10px;margin-top:10px;max-height:300px;overflow-y:auto}}
-    .msg{{padding:8px 12px;border-radius:14px;margin:6px 0;font-size:13px;line-height:1.4;max-width:85%}}
-    .msg-c{{background:#e0f2fe;color:#0c4a6e}} .msg-b{{background:#dcfce7;color:#14532d;margin-left:auto;text-align:right}}
-    .time{{font-size:10px;color:#94a3b8;margin-top:2px}}
-    </style></head><body>
-    <div class="header"><h1>NCIP ADMIN - {business_id}</h1><small style="opacity:0.7">bot-2-flash.onrender.com</small></div>
-    <div class="stats">
-      <div class="stat"><b>{len(all_chats)}</b><span>WATEJA</span></div>
-      <div class="stat"><b>{len(control.get('paused_customers',[]))}</b><span>PAUSED</span></div>
-      <div class="stat"><b>{sum(len(v) if isinstance(v,list) else 0 for v in all_chats.values())}</b><span>JUMLA MSGS</span></div>
-    </div>
-    <div class="container">
-    '''
-  """
+
     if len(all_chats) == 0:
         html += f"<div style='background:white;border-radius:16px;padding:40px;text-align:center;color:#94a3b8'>Hakuna chat bado<br><small style='font-size:11px'>Keys: {list(data.keys())}</small></div>"
     
@@ -338,3 +304,38 @@ def save_chat(business_id, customer_num, role, message):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    ADMIN_TEMPLATE = """
+    html = f'''
+    <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    body{{margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,sans-serif}}
+    .header{{background:#111827;color:white;padding:20px;text-align:center}}
+    .header h1{{margin:0;font-size:18px;letter-spacing:1px}}
+    .stats{{display:flex;gap:10px;padding:12px}}
+    .stat{{flex:1;background:white;border-radius:12px;padding:12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.1)}}
+    .stat b{{display:block;font-size:20px}}
+    .stat span{{font-size:12px;color:#64748b}}
+    .container{{padding:12px}}
+    .card{{background:white;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:4px solid #10b981}}
+    .card.paused{{border-left-color:#ef4444}}
+    .card-top{{display:flex;justify-content:space-between;align-items:center}}
+    .num{{font-weight:700;font-size:15px}}
+    .badge{{font-size:11px;padding:4px 10px;border-radius:20px}}
+    .badge.on{{background:#dcfce7;color:#166534}} .badge.off{{background:#fee2e2;color:#991b1b}}
+    .actions{{margin:10px 0;display:flex;gap:8px}}
+    .btn{{flex:1;text-align:center;padding:10px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;color:white}}
+    .btn-pause{{background:#ef4444}} .btn-resume{{background:#10b981}} .btn-wa{{background:#111827}}
+    .chat-box{{background:#f8fafc;border-radius:12px;padding:10px;margin-top:10px;max-height:300px;overflow-y:auto}}
+    .msg{{padding:8px 12px;border-radius:14px;margin:6px 0;font-size:13px;line-height:1.4;max-width:85%}}
+    .msg-c{{background:#e0f2fe;color:#0c4a6e}} .msg-b{{background:#dcfce7;color:#14532d;margin-left:auto;text-align:right}}
+    .time{{font-size:10px;color:#94a3b8;margin-top:2px}}
+    </style></head><body>
+    <div class="header"><h1>NCIP ADMIN - {business_id}</h1><small style="opacity:0.7">bot-2-flash.onrender.com</small></div>
+    <div class="stats">
+      <div class="stat"><b>{len(all_chats)}</b><span>WATEJA</span></div>
+      <div class="stat"><b>{len(control.get('paused_customers',[]))}</b><span>PAUSED</span></div>
+      <div class="stat"><b>{sum(len(v) if isinstance(v,list) else 0 for v in all_chats.values())}</b><span>JUMLA MSGS</span></div>
+    </div>
+    <div class="container">
+    '''
+  """
