@@ -223,7 +223,7 @@ def admin_panel(business_id):
     return f"<html><body><h1>NCIP ADMIN - {business_id}</h1><p>Wateja: {len(all_chats)}</p><p>Paused: {control.get('paused_customers', [])}</p><pre>{str(all_chats)[:5000]}</pre></body></html>"
 @app.route('/admin/<business_id>/control')
 
-             if len(all_chats) == 0:
+ if len(all_chats) == 0:
         html += f"<div style='background:white;border-radius:16px;padding:40px;text-align:center;color:#94a3b8'>Hakuna chat bado<br><small style='font-size:11px'>Keys: {list(data.keys())}</small></div>"
     
     for num, msgs in all_chats.items():
