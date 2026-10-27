@@ -7,7 +7,9 @@ import google.generativeai  as genai
 from dotenv import load_dotenv
 load_dotenv()
 
-
+CHATS_FILE = "/tmp/chats.json"
+CONTROL_FILE = "/tmp/control.json"
+VERIFY_TOKEN = "NEGRO342"
 genai.configure(api_key=os.getenv("GEMINI_API_KEY")) 
 SYSTEM_PROMPT = """
     Wewe ni NingaBot, bot wa biashara kutoka Dar es salaam Tanzania.
