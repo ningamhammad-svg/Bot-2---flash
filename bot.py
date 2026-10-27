@@ -221,7 +221,7 @@ def admin_panel(business_id):
     control = get_control_data()
     
     all_chats = data.get(business_id, {})
-   return f"<html><body><h1>NCIP ADMIN - {business_id}</h1><p>Wateja: {len(all_chats)}</p><p>Paused: {control.get('paused_customers', [])}</p><pre>{str(all_chats)[:5000]}</pre></body></html>"
+    return f"<html><body><h1>NCIP ADMIN - {business_id}</h1><p>Wateja: {len(all_chats)}</p><p>Paused: {control.get('paused_customers', [])}</p><pre>{str(all_chats)[:5000]}</pre></body></html>"
 @app.route('/admin/<business_id>/control')
 def admin_control(business_id):
     token = request.args.get("token")
