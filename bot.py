@@ -175,7 +175,7 @@ def webhook():
                                    save_chat(PHONE_NUMBER_ID, from_num, "customer", msg_body)
                                    return "OK" # usijibu
                                 lower = msg_body.lower()
-                                business_id = NINGA TELLEPHONE ACCESSORIES .
+                                business_id = PHONE_NUMBER_ID
                                 save_chat(business_id, from_num, "customer", msg_body)
                                 save_chat(business_id, from_num, "bot", reply_text)
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
