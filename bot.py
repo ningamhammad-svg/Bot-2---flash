@@ -353,7 +353,7 @@ if __name__ == "__main__":
 <title>NCIP ADMIN</title>
 <style>
 body{font-family:sans-serif;background:#0f172a;color:white;margin:0;padding:10px}
-.header{background:linear-gradient(90deg,#ff8a00,#2b6cb0);padding:15px;border-radius:12px;text-align:center}
+header{background:linear-gradient(90deg,#ff8a00,#2b6cb0);padding:15px;border-radius:12px;text-align:center}
 .customer{background:#1e293b;margin:15px 0;border-radius:12px;padding:12px;border-left:5px solid #22c55e}
 .customer.paused{border-left-color:#ef4444;background:#2a1a1a}
 .msg{padding:8px 12px;border-radius:18px;margin:5px 0;max-width:85%;color:black}
