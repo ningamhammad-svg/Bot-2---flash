@@ -170,6 +170,9 @@ def webhook():
                                     continue
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
+                                save_chat(business_id, from_number, "customer", message_text)
+
+                                save_chat(business_id, from_number, "bot", ai_reply)
                                 if not msg_body and msg.get("image"):
                                     msg_body = msg.get("image", {}).get("caption", "")
                                     image_id = msg.get("image", {}).get("id")
@@ -208,6 +211,30 @@ def webhook():
     except Exception as e:
              print(f"ERROR: {e}")     
     return "OK", 200  
+def save_chat(business_id, customer_number, role, text):
+    data = {}
+    if os.path.exists(CHATS_FILE):
+        try:
+            with open(CHATS_FILE, 'r') as f:
+                data = json.load(f)
+        except:
+            data = {}
+    
+    if business_id not in data:
+        data[business_id] = {}
+    if customer_number not in data[business_id]:
+        data[business_id][customer_number] = []
+    
+    data[business_id][customer_number].append({
+        "role": role,
+        "msg": text,
+        "time": datetime.now().strftime("%H:%M %d/%m")
+    })
+    # hifadhi 30 za mwisho tu
+    data[business_id][customer_number] = data[business_id][customer_number][-30:]
+    
+    with open(CHATS_FILE, 'w') as f:
+        json.dump(data, f)
 @app.route('/admin/<business_id>')
 def admin_panel(business_id):
     token = request.args.get("token")
