@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, render_template_string 
 import requests, os
+import json
 from datetime import datetime
 from PIL import Image
 import google.generativeai  as genai
@@ -175,6 +176,7 @@ def webhook():
                                    save_chat(PHONE_NUMBER_ID, from_num, "customer", msg_body)
                                    return "OK" # usijibu
                                 lower = msg_body.lower()
+                                reply_text = ""
                                 business_id = PHONE_NUMBER_ID
                                 save_chat(business_id, from_num, "customer", msg_body)
                                 save_chat(business_id, from_num, "bot", reply_text)
