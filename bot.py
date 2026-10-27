@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template_string 
 import requests, os
+from datetime import datetime
 from PIL import Image
 import google.generativeai  as genai
 from dotenv import load_dotenv
@@ -169,8 +170,14 @@ def webhook():
                                 if not msg_body and msg.get("image"):
                                     msg_body = msg.get("image", {}).get("caption", "")
                                     image_id = msg.get("image", {}).get("id")
-                               
+                                if is_bot_paused(from_num):
+                                   print(f"BOT AMELALA kwa {from_num} - Sijibu, bosi anaongea")
+                                   save_chat(PHONE_NUMBER_ID, from_num, "customer", msg_body)
+                                   return "OK" # usijibu
                                 lower = msg_body.lower()
+                                business_id = NINGA TELLEPHONE ACCESSORIES .
+                                save_chat(business_id, from_num, "customer", msg_body)
+                                save_chat(business_id, from_num, "bot", reply_text)
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
                                 order_keywords = ["order", "nitanunua", "namuhitaji boss", "nahitaji delivery", "nataka", "ninataka", "naomba", "nauza", "bei", "nitalipa", 
                                                   "nimeshalipa", "lipa", "nunua", "book", "agiza"] 
@@ -196,9 +203,215 @@ def webhook():
                                     send_whatsapp_reply(from_num, reply)
     except Exception as e:
              print(f"ERROR: {e}")     
-    return "OK", 200                  
+    return "OK", 200  
+
+@app.route('/admin/<business_id>')
+def admin_panel(business_id):
+    token = request.args.get("token")
+    if token != VERIFY_TOKEN:
+        return "❌ Token si sahihi", 403
+    
+    data = {}
+    if os.path.exists(CHATS_FILE):
+        with open(CHATS_FILE, 'r') as f:
+            data = json.load(f)
+    
+    control = get_control_data()
+    
+    all_chats = data.get(business_id, {})
+    return render_template_string(ADMIN_TEMPLATE, 
+                                  business_id=business_id,
+                                  all_chats=all_chats,
+                                  paused_list=control.get("paused_customers", []),
+                                  is_global_paused=control.get("global_pause", False),
+                                  token=token)
+
+@app.route('/admin/<business_id>/control')
+def admin_control(business_id):
+    token = request.args.get("token")
+    action = request.args.get("action")
+    customer = request.args.get("customer")
+    
+    if token != VERIFY_TOKEN:
+        return {"error": "token si sahihi"}, 403
+    
+    control = get_control_data()
+    
+    if action == "pause":
+        pause_bot_for_customer(customer)
+        return {"message": f"😴 Bot amelalazwa kwa {customer}. Sasa wewe ongea nae!"}
+    
+    elif action == "resume":
+        resume_bot_for_customer(customer)
+        return {"message": f"☀️ Bot ameamshwa kwa {customer}. Ataanza kujibu."}
+    
+    elif action == "pause_global":
+        control["global_pause"] = True
+        save_control_data(control)
+        return {"message": "😴 BOT AMELALA GLOBAL - Hajibu mtu yeyote!"}
+    
+    elif action == "resume_global":
+        control["global_pause"] = False
+        save_control_data(control)
+        return {"message": "☀️ BOT AMEAMKA GLOBAL - Anajibu wote!"}
+    
+    return {"error": "action haijulikani"}, 400
+
+# === 4. FUNCTION YA KUTUMA ADMIN LINK KWA MFANYABIASHARA ===
+def tuma_admin_link_kwa_mfanyabiashara(owner_whatsapp_number):
+    """Tuma link kwa mfanyabiashara baada ya kununua bot"""
+    # Badilisha YOUR_DOMAIN na domain yako halisi
+    YOUR_DOMAIN = "https://yourdomain.com"  # mfano https://ncip.onrender.com
+    link = f"{YOUR_DOMAIN}/admin/{PHONE_NUMBER_ID}?token={VERIFY_TOKEN}"
+    
+    text = f"""✅ *Hongera! Msaidizi wako wa NCIP uko tayari*
+
+🔗 *ADMIN LINK YAKO:*
+{link}
+
+Kupitia link hii utaweza:
+1. Kuona mazungumzo yote ya bot yako na wateja LIVE
+2. Kuona bot imeishia wapi kabla ya kukuita
+3. Kujibu mteja moja kwa moja kwa kubonyeza 'Jibu kwa WhatsApp'
+
+⚠️ Usimtumie mtu yeyote link hii, ni siri yako.
+
+Karibu NCIP DIGITAL MARKET 🚀"""
+    
+    send_whatsapp_reply(owner_whatsapp_number, text)
+
+CONTROL_FILE = "bot_control.json"
+
+def get_control_data():
+    if os.path.exists(CONTROL_FILE):
+        with open(CONTROL_FILE, 'r') as f:
+            return json.load(f)
+    return {"paused_customers": [], "global_pause": False}
+
+def save_control_data(data):
+    with open(CONTROL_FILE, 'w') as f:
+        json.dump(data, f, indent=2)
+
+def is_bot_paused(customer_num):
+    data = get_control_data()
+    if data.get("global_pause"):
+        return True
+    return customer_num in data.get("paused_customers", [])
+
+def pause_bot_for_customer(customer_num):
+    data = get_control_data()
+    if customer_num not in data["paused_customers"]:
+        data["paused_customers"].append(customer_num)
+    save_control_data(data)
+    print(f">>> BOT AMELALAZWA kwa {customer_num}")
+
+def resume_bot_for_customer(customer_num):
+    data = get_control_data()
+    if customer_num in data["paused_customers"]:
+        data["paused_customers"].remove(customer_num)
+    save_control_data(data)
+    print(f">>> BOT AMEAMSHWA kwa {customer_num}")
+CHATS_FILE = "chats.json"
+
+def save_chat(business_id, customer_num, role, message):
+    """Hifadhi kila ujumbe - role ni 'customer' au 'bot'"""
+    try:
+        if os.path.exists(CHATS_FILE):
+            with open(CHATS_FILE, 'r') as f:
+                data = json.load(f)
+        else:
+            data = {}
+        
+        if business_id not in data:
+            data[business_id] = {}
+        if customer_num not in data[business_id]:
+            data[business_id][customer_num] = []
+        
+        data[business_id][customer_num].append({
+            "role": role,
+            "msg": message,
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        })
+        data[business_id][customer_num] = data[business_id][customer_num][-20:]
+        
+        with open(CHATS_FILE, 'w') as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"ERROR SAVE CHAT: {e}")
 
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    ADMIN_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NCIP ADMIN CONTROL</title>
+<style>
+body{font-family:sans-serif;background:#0f172a;color:white;margin:0;padding:10px}
+.header{background:linear-gradient(90deg,#ff8a00,#2b6cb0);padding:15px;border-radius:12px;text-align:center}
+.customer{background:#1e293b;margin:15px 0;border-radius:12px;padding:12px;border-left:5px solid #22c55e}
+.customer.paused{border-left-color:#ef4444;background:#2a1a1a}
+.msg{padding:8px 12px;border-radius:18px;margin:5px 0;max-width:85%;color:black}
+.cust{background:#dbeafe}
+.bot{background:#dcfce7;margin-left:auto;text-align:right}
+.time{font-size:10px;color:gray}
+.btn{padding:10px 16px;border-radius:20px;text-decoration:none;display:inline-block;margin:4px;font-weight:bold;border:none;cursor:pointer}
+.btn-pause{background:#ef4444;color:white}
+.btn-resume{background:#22c55e;color:white}
+.btn-wa{background:#25D366;color:white}
+.btn-global{background:#f59e0b;color:black;width:100%;padding:15px;font-size:16px}
+.status{padding:8px;border-radius:10px;text-align:center;font-weight:bold;margin:10px 0}
+.status-awake{background:#22c55e22;color:#22c55e;border:1px solid #22c55e}
+.status-sleep{background:#ef444422;color:#ef4444;border:1px solid #ef4444}
+</style>
+<script>
+function controlBot(action, customer){
+  fetch(`/admin/${BUSINESS_ID}/control?token=${TOKEN}&action=${action}&customer=${customer}`)
+  .then(r=>r.json()).then(d=>{ alert(d.message); location.reload(); });
+}
+</script>
+</head>
+<body>
+<div class="header">
+<h2>NCIP - BOT CONTROL PANEL</h2>
+<p>Biashara: {{business_id}}</p>
+{% if is_global_paused %}
+<div class="status status-sleep">😴 BOT AMELALA - GLOBAL (Hajibu mtu yeyote)</div>
+<button class="btn btn-global btn-resume" onclick="controlBot('resume_global','')">☀️ AMSHA BOT KWA WOTE</button>
+{% else %}
+<div class="status status-awake">✅ BOT ANAAMKA - Anajibu</div>
+<button class="btn btn-global btn-pause" onclick="controlBot('pause_global','')">😴 LALAZA BOT KWA WOTE</button>
+{% endif %}
+</div>
 
+{% for cust_num, chats in all_chats.items() %}
+<div class="customer {{'paused' if cust_num in paused_list else ''}}">
+<h3>👤 {{cust_num}}</h3>
+{% if cust_num in paused_list %}
+<div class="status status-sleep">BOT AMELALA kwa huyu mteja - Wewe unaongea</div>
+<button class="btn btn-resume" onclick="controlBot('resume','{{cust_num}}')">☀️ AMSHA BOT</button>
+{% else %}
+<div class="status status-awake">BOT ANAJIBU huyu mteja</div>
+<button class="btn btn-pause" onclick="controlBot('pause','{{cust_num}}')">😴 LALAZA BOT</button>
+{% endif %}
+<a class="btn btn-wa" href="https://wa.me/{{cust_num}}" target="_blank">💬 JIBU MTEJA</a>
+
+<hr style="border-color:#334155">
+{% for c in chats[-15:] %}
+<div class="msg {{'cust' if c.role=='customer' else 'bot'}}">
+<b>{{'Mteja' if c.role=='customer' else 'Bot'}}:</b> {{c.msg}}<br>
+<span class="time">{{c.time}}</span>
+</div>
+{% endfor %}
+</div>
+{% endfor %}
+
+<script>
+const BUSINESS_ID = "{{business_id}}";
+const TOKEN = "{{token}}";
+</script>
+</body>
+</html>
+"""
