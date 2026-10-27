@@ -208,10 +208,8 @@ def webhook():
                                 else:
                                     reply = get_ai_reply(msg_body)
                                     send_whatsapp_reply(from_num, reply)
-    except Exception as e:
-             print(f"ERROR: {e}")     
-    return "OK", 200  
-def save_chat(business_id, customer_number, role, text):
+
+    def save_chat(business_id, customer_number, role, text):
     data = {}
     if os.path.exists(CHATS_FILE):
         try:
@@ -235,6 +233,10 @@ def save_chat(business_id, customer_number, role, text):
     
     with open(CHATS_FILE, 'w') as f:
         json.dump(data, f)
+    except Exception as e:
+             print(f"ERROR: {e}")     
+    return "OK", 200  
+
 @app.route('/admin/<business_id>')
 def admin_panel(business_id):
     token = request.args.get("token")
