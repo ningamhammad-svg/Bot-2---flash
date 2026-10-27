@@ -221,13 +221,7 @@ def admin_panel(business_id):
     control = get_control_data()
     
     all_chats = data.get(business_id, {})
-    return render_template_string(ADMIN_TEMPLATE, 
-                                  business_id=business_id,
-                                  all_chats=all_chats,
-                                  paused_list=control.get("paused_customers", []),
-                                  is_global_paused=control.get("global_pause", False),
-                                  token=token)
-
+   return f"<html><body><h1>NCIP ADMIN - {business_id}</h1><p>Wateja: {len(all_chats)}</p><p>Paused: {control.get('paused_customers', [])}</p><pre>{str(all_chats)[:5000]}</pre></body></html>"
 @app.route('/admin/<business_id>/control')
 def admin_control(business_id):
     token = request.args.get("token")
