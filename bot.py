@@ -223,7 +223,7 @@ def admin_panel(business_id):
     return f"<html><body><h1>NCIP ADMIN - {business_id}</h1><p>Wateja: {len(all_chats)}</p><p>Paused: {control.get('paused_customers', [])}</p><pre>{str(all_chats)[:5000]}</pre></body></html>"
 @app.route('/admin/<business_id>/control')
 
-     html = f'''
+html = f'''
     <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
     body{{margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,sans-serif}}
