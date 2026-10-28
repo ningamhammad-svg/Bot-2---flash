@@ -5,9 +5,9 @@ from datetime import datetime
 MEMORY_DIR = "memory_data"
 os.makedirs(MEMORY_DIR, exist_ok=True)
 business_id = None
-    try:
-        business_id = value.get('messages', {}).get('PHONE_NUMBER_ID')
-    except:
+try:
+    business_id = value.get('messages', {}).get('PHONE_NUMBER_ID')
+except:
     business_id = entry.get('id')
     if not business_id:
         business_id = PHONE_NUMBER_ID
