@@ -209,7 +209,7 @@ def webhook():
                                     reply = get_ai_reply(msg_body)
                                     send_whatsapp_reply(from_num, reply)
 
-except Exception as e:
+    except Exception as e:
              print(f"ERROR: {e}")     
     return "OK", 200  
 def save_chat(business_id, customer_number, role, text):
