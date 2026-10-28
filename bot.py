@@ -174,7 +174,7 @@ try:
                                 if is_bot_paused(from_num):
                                    print(f"BOT AMELALA kwa {from_num}")
                                    save_chat(business_id, from_num, "customer", msg_body)
-                                return "OK", 200    
+                                    continue   
                                 ai_reply = get_ai_reply(msg_body)
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
