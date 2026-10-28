@@ -188,7 +188,7 @@ def webhook():
                                 except:
                                     business_id = None
 
-                                 if not business_id:
+                                if not business_id:
                                     business_id = entry.get('id')
 
 # hakikisha business_id ipo ndio uendelee
