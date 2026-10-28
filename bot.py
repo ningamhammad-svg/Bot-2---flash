@@ -168,8 +168,8 @@ def webhook():
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
                                 save_chat(business_id, from_num, "customer", msg_body) 
                             reply = get_ai_reply(msg_body) 
-                                send_whatsapp_reply(from_num, reply)
-                                save_chat(business_id, from_num, "bot", reply) 
+                            send_whatsapp_reply(from_num, reply)
+                            save_chat(business_id, from_num, "bot", reply) 
                             msg_id = msg.get("id")
                                 if is_duplicate(msg_id):
                                     print(f"DUPLICATE IMEZUIWA: {msg_id}")
