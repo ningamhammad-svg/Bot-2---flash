@@ -183,9 +183,9 @@ def webhook():
                                 lower = msg_body.lower()
                                 reply_text = ""
                                 business_id = None
-                                    try:
+                                   try:
                                         business_id = value.get('metadata', {}).get('phone_number_id')
-                                    except:
+                                   except:
                                         business_id = None
 
                                  if not business_id:
