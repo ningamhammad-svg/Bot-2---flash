@@ -165,11 +165,7 @@ def webhook():
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")
                             if msg_body:
-                                print(f"MESSAGE FROM {from_num}: {msg_body}")
-                                save_chat(business_id, from_num, "customer", msg_body) 
-                            reply = get_ai_reply(msg_body) 
-                            send_whatsapp_reply(from_num, reply)
-                            save_chat(business_id, from_num, "bot", reply) 
+                                print(f"MESSAGE FROM {from_num}: {msg_body}") 
                             msg_id = msg.get("id")
                             if is_duplicate(msg_id):
                                 print(f"DUPLICATE IMEZUIWA: {msg_id}")
@@ -181,7 +177,10 @@ def webhook():
                                 ai_reply = get_ai_reply(msg_body)
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
-                            
+                            save_chat(business_id, from_num, "customer", msg_body) 
+                            reply = get_ai_reply(msg_body) 
+                            send_whatsapp_reply(from_num, reply)
+                            save_chat(business_id, from_num, "bot", reply)
                             if not msg_body and msg.get("image"):
                                 msg_body = msg.get("image", {}).get("caption", "")
                                 image_id = msg.get("image", {}).get("id")
