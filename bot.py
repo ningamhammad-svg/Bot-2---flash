@@ -182,7 +182,9 @@ def webhook():
                                    return "OK" # usijibu
                                 lower = msg_body.lower()
                                 reply_text = ""
-                                business_id = PHONE_NUMBER_ID
+                                business_id = value.get('metadata', {}).get('phone_number_id')
+                                if not business_id:
+                                business_id = entry.get('id')  # fallback
                                 save_chat(business_id, from_num, "customer", msg_body)
                                 save_chat(business_id, from_num, "bot", reply_text)
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
