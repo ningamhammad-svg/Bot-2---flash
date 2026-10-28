@@ -171,20 +171,20 @@ def webhook():
                             send_whatsapp_reply(from_num, reply)
                             save_chat(business_id, from_num, "bot", reply) 
                             msg_id = msg.get("id")
-                                if is_duplicate(msg_id):
-                                    print(f"DUPLICATE IMEZUIWA: {msg_id}")
-                                    continue
-                                if is_bot_paused(from_num):
-                                   print(f"BOT AMELALA kwa {from_num}")
-                                   save_chat(business_id, from_num, "customer", msg_body)
-                                   continue   
+                            if is_duplicate(msg_id):
+                                print(f"DUPLICATE IMEZUIWA: {msg_id}")
+                                continue
+                            if is_bot_paused(from_num):
+                                print(f"BOT AMELALA kwa {from_num}")
+                                save_chat(business_id, from_num, "customer", msg_body)
+                                continue   
                                 ai_reply = get_ai_reply(msg_body)
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
                             
-                                if not msg_body and msg.get("image"):
-                                    msg_body = msg.get("image", {}).get("caption", "")
-                                    image_id = msg.get("image", {}).get("id")
+                            if not msg_body and msg.get("image"):
+                                msg_body = msg.get("image", {}).get("caption", "")
+                                image_id = msg.get("image", {}).get("id")
                               
                                 lower = msg_body.lower()
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
@@ -192,24 +192,24 @@ def webhook():
                                                   "nimeshalipa", "lipa", "nunua", "book", "agiza"] 
                                 shida_keywords = ["shida", "haifanyi", "mbovu", "tatizo", "imekataa", "malalamiko", "mwizi", "haijafika",
                                                   "complaint", "help"]
-                                if any(k in lower for k in order_keywords):
-                                    tuma_alert_kwa_mmiliki(from_num, msg_body, "ORDER") 
-                                elif any(k in lower for k in shida_keywords):
-                                    tuma_alert_kwa_mmiliki(from_num, msg_body, "SHIDA") 
+                            if any(k in lower for k in order_keywords):
+                                tuma_alert_kwa_mmiliki(from_num, msg_body, "ORDER") 
+                            elif any(k in lower for k in shida_keywords):
+                                tuma_alert_kwa_mmiliki(from_num, msg_body, "SHIDA") 
                                 
-                                keywords = ["location", "Google", "map","ziko","duka","mnako","mko","patikana","address","link", "ramani",
+                            keywords = ["location", "Google", "map","ziko","duka","mnako","mko","patikana","address","link", "ramani",
                                             "mko wapi", "mnakopatikana", "mko wapi", "duka liko wapi", "mahali mlipo" "ofisi zenu", "kufika",
                                            "where","locate","located","pin","come","direction","find you","office","shop"]
-                                if any(k in lower for k in keywords):
-                                    print(">>>NINATUMA LOCATION<<<")
-                                    tuma_location(from_num)
-                                elif "iPhone" in lower:
-                                    tuma_picha_local(from_num, "products/iPhone.jpg", "iPhone Pro Max - Tsh. 780k, Original na warranty")
-                                elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
-                                    tuma_picha_local(from_num, "products/iPhone.jpg", "Hizi hapa bidhaa zetu maarufu")
-                                else:
-                                    reply = get_ai_reply(msg_body)
-                                    send_whatsapp_reply(from_num, reply)
+                            if any(k in lower for k in keywords):
+                                print(">>>NINATUMA LOCATION<<<")
+                                tuma_location(from_num)
+                            elif "iPhone" in lower:
+                                tuma_picha_local(from_num, "products/iPhone.jpg", "iPhone Pro Max - Tsh. 780k, Original na warranty")
+                            elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
+                                tuma_picha_local(from_num, "products/iPhone.jpg", "Hizi hapa bidhaa zetu maarufu")
+                            else:
+                                reply = get_ai_reply(msg_body)
+                                send_whatsapp_reply(from_num, reply)
     except Exception as e:
         print(f"ERROR: {e}")     
     return "OK", 200  
