@@ -155,7 +155,7 @@ def webhook():
 if is_bot_paused(from_num):
     print(f"BOT AMELALA kwa {from_num}")
     save_chat(business_id, from_num, "customer", msg_body)
-return "OK", 200
+    return "OK", 200
 try:
         if data and data.get("object") == "whatsapp_business_account":
             for entry in data.get("entry", []):
@@ -209,7 +209,7 @@ try:
                                     send_whatsapp_reply(from_num, reply)
 except Exception as e:
              print(f"ERROR: {e}")     
-    return "OK", 200  
+return "OK", 200  
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
