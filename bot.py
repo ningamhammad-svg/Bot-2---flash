@@ -209,7 +209,7 @@ def webhook():
                                     reply = get_ai_reply(msg_body)
                                     send_whatsapp_reply(from_num, reply)
 
-    def save_chat(business_id, customer_number, role, text):
+def save_chat(business_id, customer_number, role, text):
     data = {}
     if os.path.exists(CHATS_FILE):
         try:
@@ -233,8 +233,6 @@ def webhook():
     
     with open(CHATS_FILE, 'w') as f:
         json.dump(data, f)
-        except Exception as e:
-        data = {}
 except Exception as e:
              print(f"ERROR: {e}")     
     return "OK", 200  
