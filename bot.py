@@ -152,10 +152,6 @@ def verify():
 def webhook():
     data = request.get_json()
     print(f"INCOMING: {data}")  # <-- HII NDIO ULIYOZUNGUSHIA, IPO HAPA
-if is_bot_paused(from_num):
-    print(f"BOT AMELALA kwa {from_num}")
-    save_chat(business_id, from_num, "customer", msg_body)
-    return "OK", 200
 try:
         if data and data.get("object") == "whatsapp_business_account":
             for entry in data.get("entry", []):
@@ -175,6 +171,10 @@ try:
                                 if is_duplicate(msg_id):
                                     print(f"DUPLICATE IMEZUIWA: {msg_id}")
                                     continue
+                                if is_bot_paused(from_num):
+                                   print(f"BOT AMELALA kwa {from_num}")
+                                   save_chat(business_id, from_num, "customer", msg_body)
+                                   return "OK", 200    
                                 ai_reply = get_ai_reply(msg_body)
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
