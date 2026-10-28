@@ -155,7 +155,7 @@ def webhook():
 if is_bot_paused(from_num):
     print(f"BOT AMELALA kwa {from_num}")
     save_chat(business_id, from_num, "customer", msg_body)
-    return "OK", 200
+return "OK", 200
     try:
         if data and data.get("object") == "whatsapp_business_account":
             for entry in data.get("entry", []):
