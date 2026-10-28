@@ -233,7 +233,7 @@ def webhook():
     
     with open(CHATS_FILE, 'w') as f:
         json.dump(data, f)
-except Exception as e:
+        except Exception as e:
         data = {}
 except Exception as e:
              print(f"ERROR: {e}")     
