@@ -4,6 +4,8 @@ from datetime import datetime
 
 MEMORY_DIR = "memory_data"
 os.makedirs(MEMORY_DIR, exist_ok=True)
+for entry in data.get("entry", []):
+entry_id = entry.get("id")
 business_id = None
 try:
     business_id = value.get('messages', {}).get('PHONE_NUMBER_ID')
