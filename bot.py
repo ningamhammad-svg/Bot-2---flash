@@ -152,7 +152,7 @@ def verify():
 def webhook():
     data = request.get_json()
     print(f"INCOMING: {data}")  # <-- HII NDIO ULIYOZUNGUSHIA, IPO HAPA
-try:
+    try:
         if data and data.get("object") == "whatsapp_business_account":
             for entry in data.get("entry", []):
                 entry_id = entry.get("id")
@@ -207,8 +207,8 @@ try:
                                 else:
                                     reply = get_ai_reply(msg_body)
                                     send_whatsapp_reply(from_num, reply)
-except Exception as e:
-    print(f"ERROR: {e}")     
+    except Exception as e:
+        print(f"ERROR: {e}")     
     return "OK", 200  
 
 if __name__ == "__main__":
