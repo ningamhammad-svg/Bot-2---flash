@@ -179,6 +179,7 @@ def webhook():
                                 if not msg_body and msg.get("image"):
                                     msg_body = msg.get("image", {}).get("caption", "")
                                     image_id = msg.get("image", {}).get("id")
+def is_bot_paused_(from_num):
                                 if is_bot_paused(from_num):
                                    print(f"BOT AMELALA kwa {from_num} - Sijibu, bosi anaongea")
                                    save_chat(PHONE_NUMBER_ID, from_num, "customer", msg_body)
