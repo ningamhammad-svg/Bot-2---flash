@@ -208,7 +208,7 @@ try:
                                     reply = get_ai_reply(msg_body)
                                     send_whatsapp_reply(from_num, reply)
 except Exception as e:
-             print(f"ERROR: {e}")     
+    print(f"ERROR: {e}")     
 return "OK", 200  
 
 if __name__ == "__main__":
