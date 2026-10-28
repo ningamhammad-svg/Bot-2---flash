@@ -173,7 +173,7 @@ def webhook():
                         for msg in messages:
                             business_id = None
                             try:
-                                business_id = value.get('metadata', {}).get('PHONE_NUMBER_ID')
+                                business_id = value.get('message', {}).get('PHONE_NUMBER_ID')
                             except:
                                 business_id = entry.get('id')
                             if not business_id:
