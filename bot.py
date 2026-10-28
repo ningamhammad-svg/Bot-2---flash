@@ -306,37 +306,7 @@ def get_control_data():
             return json.load(f)
     return {"paused_customers": [], "global_pause": False}
 
-def save_control_data(data):
-    with open(CONTROL_FILE, 'w') as f:
-        json.dump(data, f, indent=2)
 
-def is_bot_paused(customer_num):
-    data = get_control_data()
-    if data.get("global_pause"):
-        return True
-    return customer_num in data.get("paused_customers", [])
-
-def pause_bot_for_customer(customer_num):
-    data = get_control_data()
-    if customer_num not in data["paused_customers"]:
-        data["paused_customers"].append(customer_num)
-    save_control_data(data)
-    print(f">>> BOT AMELALAZWA kwa {customer_num}")
-
-def resume_bot_for_customer(customer_num):
-    data = get_control_data()
-    if customer_num in data["paused_customers"]:
-        data["paused_customers"].remove(customer_num)
-    save_control_data(data)
-    print(f">>> BOT AMEAMSHWA kwa {customer_num}")
-CHATS_FILE = "chats.json"
-
-def save_chat(business_id, customer_num, role, message):
-    """Hifadhi kila ujumbe - role ni 'customer' au 'bot'"""
-    try:
-        if os.path.exists(CHATS_FILE):
-            with open(CHATS_FILE, 'r') as f:
-                data = json.load(f)
         else:
             data = {}
         
