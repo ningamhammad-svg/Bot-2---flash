@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from storage import save_chat, is_bot_paused, get_control_data
 from admin import admin_bp
-
+from rememb import save_to_memory, format_memory_for_ai, clear_memory
 app = Flask(__name__)
 app.register_blueprint(admin_bp)
 VERIFY_TOKEN = "NEGRO342"
@@ -46,6 +46,16 @@ SYSTEM_PROMPT = """
      7.usitume message nyinyi kwa wakati mmoja
      """
 def get_ai_reply(user_message):
+    kumbukumbu = format_memory_for_ai(business_id, from_num)
+    
+    prompt = f"""
+    Wewe ni msaidizi wa duka.
+    Kumbukumbu ya mazungumzo na mteja {from_num}:
+    {kumbukumbu}
+
+    Ujumbe mpya wa mteja: {msg_body}
+    Jibu kwa kifupi na kwa Kiswahili.
+    """
     try:
        model = genai.GenerativeModel(
            model_name="gemini-3.1-flash-lite",
@@ -177,10 +187,10 @@ def webhook():
                                 ai_reply = get_ai_reply(msg_body)
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
-                            save_chat(business_id, from_num, "customer", msg_body) 
+                            save_to_memory(business_id, from_num, "customer", msg_body) 
                             reply = get_ai_reply(msg_body) 
                             send_whatsapp_reply(from_num, reply)
-                            save_chat(business_id, from_num, "bot", reply)
+                            save_to_memory(business_id, from_num, "bot", reply)
                             if not msg_body and msg.get("image"):
                                 msg_body = msg.get("image", {}).get("caption", "")
                                 image_id = msg.get("image", {}).get("id")
