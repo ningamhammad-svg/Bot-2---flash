@@ -209,7 +209,7 @@ try:
                                     send_whatsapp_reply(from_num, reply)
 except Exception as e:
              print(f"ERROR: {e}")     
-   return "OK", 200  
+return "OK", 200  
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
