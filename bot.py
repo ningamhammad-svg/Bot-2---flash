@@ -183,7 +183,7 @@ def webhook():
                             if is_bot_paused(from_num):
                                 print(f"BOT AMELALA kwa {from_num}")
                                 continue   
-                                ai_reply = get_ai_reply(msg_body)
+                                ai_reply = get_ai_reply(business_id, from_num,msg_body)
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
                             save_to_memory(business_id, from_num, "customer", msg_body) 
