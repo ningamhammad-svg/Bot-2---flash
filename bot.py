@@ -193,7 +193,7 @@ def webhook():
 
 # hakikisha business_id ipo ndio uendelee
                                 if not business_id:
-                               business_id = "unknown"
+                                    business_id = "unknown"
                                 save_chat(business_id, from_num, "customer", msg_body)
                                 save_chat(business_id, from_num, "bot", reply_text)
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
