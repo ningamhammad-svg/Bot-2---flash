@@ -305,7 +305,7 @@ def get_control_data():
     return {"paused_customers": [], "global_pause": False}
 
 
-        else:
+    else:
             data = {}
         
         if business_id not in data:
