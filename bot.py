@@ -6,9 +6,11 @@ from PIL import Image
 import google.generativeai  as genai
 from dotenv import load_dotenv
 load_dotenv()
+from storage import save_chat, is_bot_paused, get_control_data
+from admin import admin_bp
 
-CHATS_FILE = "/tmp/chats.json"
-CONTROL_FILE = "/tmp/control.json"
+app = Flask(__name__)
+app.register_blueprint(admin_bp)
 VERIFY_TOKEN = "NEGRO342"
 genai.configure(api_key=os.getenv("GEMINI_API_KEY")) 
 SYSTEM_PROMPT = """
@@ -150,7 +152,10 @@ def verify():
 def webhook():
     data = request.get_json()
     print(f"INCOMING: {data}")  # <-- HII NDIO ULIYOZUNGUSHIA, IPO HAPA
-
+if is_bot_paused(from_num):
+    print(f"BOT AMELALA kwa {from_num}")
+    save_chat(business_id, from_num, "customer", msg_body)
+    return "OK", 200
     try:
         if data and data.get("object") == "whatsapp_business_account":
             for entry in data.get("entry", []):
@@ -173,29 +178,12 @@ def webhook():
                                 ai_reply = get_ai_reply(msg_body)
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
-                                save_chat(business_id, from_num, "customer", msg_body)
-
-                                save_chat(business_id, from_num, "bot", ai_reply)
+                            
                                 if not msg_body and msg.get("image"):
                                     msg_body = msg.get("image", {}).get("caption", "")
                                     image_id = msg.get("image", {}).get("id")
                               
                                 lower = msg_body.lower()
-                                reply_text = ""
-                                business_id = None
-                                try:
-                                    business_id = value.get('metadata', {}).get('phone_number_id')
-                                except:
-                                    business_id = None
-
-                                if not business_id:
-                                    business_id = entry.get('id')
-
-# hakikisha business_id ipo ndio uendelee
-                                if not business_id:
-                                    business_id = "unknown"
-                                save_chat(business_id, from_num, "customer", msg_body)
-                                save_chat(business_id, from_num, "bot", reply_text)
                                 print(f"MESSAGE FROM {from_num}: {msg_body}")
                                 order_keywords = ["order", "nitanunua", "namuhitaji boss", "nahitaji delivery", "nataka", "ninataka", "naomba", "nauza", "bei", "nitalipa", 
                                                   "nimeshalipa", "lipa", "nunua", "book", "agiza"] 
@@ -223,136 +211,6 @@ def webhook():
     except Exception as e:
              print(f"ERROR: {e}")     
     return "OK", 200  
-def is_bot_paused_(from_num):
-    return False
-    if is_bot_paused(from_num):
-       print(f"BOT AMELALA kwa {from_num} - Sijibu, bosi anaongea")
-       save_chat(PHONE_NUMBER_ID, from_num, "customer", msg_body)
-       return "OK" # usijibu
-
-def save_chat(business_id, customer_number, role, text):
-    data = {}
-    if os.path.exists(CHATS_FILE):
-        try:
-            with open(CHATS_FILE, 'r') as f:
-                data = json.load(f)
-        except:
-            data = {}
-    
-    if business_id not in data:
-        data[business_id] = {}
-    if customer_number not in data[business_id]:
-        data[business_id][customer_number] = []
-    
-    data[business_id][customer_number].append({
-        "role": role,
-        "msg": text,
-        "time": datetime.now().strftime("%H:%M %d/%m")
-    })
-    # hifadhi 30 za mwisho tu
-    data[business_id][customer_number] = data[business_id][customer_number][-30:]
-    
-    with open(CHATS_FILE, 'w') as f:
-        json.dump(data, f)
-
-@app.route('/admin/<business_id>')
-def admin_panel(business_id):
-    token = request.args.get("token")
-    if token != VERIFY_TOKEN:
-        return "Token si sahihi", 403
-    
-    chats_data = {}
-    if os.path.exists(CHATS_FILE):
-        try:
-            with open(CHATS_FILE, 'r') as f:
-                chats_data = json.load(f)
-        except:
-            chats_data = {}
-    
-    control_data = get_control_data()
-    all_chats = chats_data.get(business_id, {})
-    
-    html_content = ''
-    for cust_num, chats in all_chats.items():
-        is_paused = cust_num in control_data.get("paused_customers", [])
-        status_html = ''
-        if is_paused:
-            status_html = f'<div style="background:#ff000022;color:red;padding:8px;text-align:center;border-radius:8px">SLEEP - Wewe unaongea</div><a href="/admin/{business_id}/control?token={token}&action=resume&customer={cust_num}" style="background:green;color:white;padding:10px;border-radius:20px;text-decoration:none;display:inline-block;margin:5px">AMSHA BOT</a>'
-        else:
-            status_html = f'<div style="background:#00ff0022;color:green;padding:8px;text-align:center;border-radius:8px">AWAKE - Bot anajibu</div><a href="/admin/{business_id}/control?token={token}&action=pause&customer={cust_num}" style="background:red;color:white;padding:10px;border-radius:20px;text-decoration:none;display:inline-block;margin:5px">LALAZA BOT</a>'
-        
-        msgs = ''
-        for c in chats[-10:]:
-            color = '#dbeafe' if c.get('role') == 'customer' else '#dcfce7'
-            msgs += f'<div style="background:{color};padding:8px;margin:5px;border-radius:10px;color:black">{c.get("role")}: {c.get("msg")}<br><small>{c.get("time")}</small></div>'
-        
-        html_content += f'<div style="background:#1e293b;margin:15px 0;padding:12px;border-radius:12px"><h3>{cust_num}</h3>{status_html}<a href="https://wa.me/{cust_num}" target="_blank" style="background:#25D366;color:white;padding:10px;border-radius:20px;text-decoration:none;display:inline-block;margin:5px">JIBU WA</a><hr>{msgs}</div>'
-
-    full_html = f'''
-    <html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>NCIP ADMIN</title></head>
-    <body style="font-family:sans-serif;background:#0f172a;color:white;padding:10px">
-    <div style="background:linear-gradient(90deg,#ff8a00,#2b6cb0);padding:15px;border-radius:12px;text-align:center">
-    <h2>NCIP - BOT CONTROL</h2><p>{business_id}</p></div>
-    <h3 style="text-align:center">Wateja: {len(all_chats)}</h3>
-    {html_content}
-    <p style="text-align:center">Bot yako: https://bot-2-flash.onrender.com</p>
-    </body></html>
-    '''
-    return full_html
-
-@app.route('/admin/<business_id>/control')
-def admin_control(business_id):
-    token = request.args.get("token")
-    action = request.args.get("action")
-    customer = request.args.get("customer")
-    if token != VERIFY_TOKEN:
-        return "Token si sahihi", 403
-    control = get_control_data()
-    if action == "pause" and customer:
-        if customer not in control["paused_customers"]:
-            control["paused_customers"].append(customer)
-    elif action == "resume" and customer:
-        if customer in control["paused_customers"]:
-            control["paused_customers"].remove(customer)
-    save_control_data(control)
-    return f'<script>alert("Imefanikiwa: {action}"); window.location.href="/admin/{business_id}?token={token}";</script>'
-def get_control_data():
-    if os.path.exists(CONTROL_FILE):
-        try:
-            with open(CONTROL_FILE, 'r') as f:
-                return json.load(f)
-        except:
-            pass
-    return {"paused_customers": [], "global_pause": False}
-
-def save_control_data(data):
-    with open(CONTROL_FILE, 'w') as f:
-        json.dump(data, f)
-
-def save_chat(business_id, customer_number, role, text):
-    data = {}
-    if os.path.exists(CHATS_FILE):
-        try:
-            with open(CHATS_FILE, 'r') as f:
-                data = json.load(f)
-        except:
-            data = {}
-    
-    if business_id not in data:
-        data[business_id] = {}
-    if customer_number not in data[business_id]:
-        data[business_id][customer_number] = []
-    
-    data[business_id][customer_number].append({
-        "role": role,
-        "msg": text,
-        "time": datetime.now().strftime("%H:%M %d/%m")
-    })
-    data[business_id][customer_number] = data[business_id][customer_number][-30:]
-    
-    with open(CHATS_FILE, 'w') as f:
-        json.dump(data, f)
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
