@@ -300,28 +300,40 @@ def admin_control(business_id):
     return f'<script>alert("Imefanikiwa: {action}"); window.location.href="/admin/{business_id}?token={token}";</script>'
 def get_control_data():
     if os.path.exists(CONTROL_FILE):
-        with open(CONTROL_FILE, 'r') as f:
-            return json.load(f)
+        try:
+            with open(CONTROL_FILE, 'r') as f:
+                return json.load(f)
+        except:
+            pass
     return {"paused_customers": [], "global_pause": False}
-    else:
+
+def save_control_data(data):
+    with open(CONTROL_FILE, 'w') as f:
+        json.dump(data, f)
+
+def save_chat(business_id, customer_number, role, text):
+    data = {}
+    if os.path.exists(CHATS_FILE):
+        try:
+            with open(CHATS_FILE, 'r') as f:
+                data = json.load(f)
+        except:
             data = {}
-        
-        if business_id not in data:
-            data[business_id] = {}
-        if customer_num not in data[business_id]:
-            data[business_id][customer_num] = []
-        
-        data[business_id][customer_num].append({
-            "role": role,
-            "msg": message,
-            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        })
-        data[business_id][customer_num] = data[business_id][customer_num][-20:]
-        
-        with open(CHATS_FILE, 'w') as f:
-            json.dump(data, f, indent=2)
-    except Exception as e:
-        print(f"ERROR SAVE CHAT: {e}")
+    
+    if business_id not in data:
+        data[business_id] = {}
+    if customer_number not in data[business_id]:
+        data[business_id][customer_number] = []
+    
+    data[business_id][customer_number].append({
+        "role": role,
+        "msg": text,
+        "time": datetime.now().strftime("%H:%M %d/%m")
+    })
+    data[business_id][customer_number] = data[business_id][customer_number][-30:]
+    
+    with open(CHATS_FILE, 'w') as f:
+        json.dump(data, f)
 
 
 if __name__ == "__main__":
