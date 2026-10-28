@@ -171,6 +171,13 @@ def webhook():
                     messages = value.get("messages")
                     if messages:
                         for msg in messages:
+                            business_id = None
+                            try:
+                                business_id = value.get('metadata', {}).get('phone_number_id')
+                            except:
+                                business_id = entry.get('id')
+                            if not business_id:
+                                business_id = PHONE_NUMBER_ID
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")
                             if msg_body:
@@ -182,7 +189,7 @@ def webhook():
                             if is_bot_paused(from_num):
                                 print(f"BOT AMELALA kwa {from_num}")
                                 continue   
-                                business_id = value.get('metadata', {}).get('phone_number_id')
+                        
                                 ai_reply = get_ai_reply(business_id, from_num,msg_body)
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
