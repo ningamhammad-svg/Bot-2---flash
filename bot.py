@@ -174,7 +174,7 @@ def webhook():
                                 msg_body = msg.get("text", {}).get("body", "")
                                 save_chat(business_id, from_num, "customer", msg_body)
 
-                                save_chat(business_id, from_num, "bot", bot_reply)
+                                save_chat(business_id, from_num, "bot", get_ai_reply)
                                 if not msg_body and msg.get("image"):
                                     msg_body = msg.get("image", {}).get("caption", "")
                                     image_id = msg.get("image", {}).get("id")
