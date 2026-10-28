@@ -303,8 +303,6 @@ def get_control_data():
         with open(CONTROL_FILE, 'r') as f:
             return json.load(f)
     return {"paused_customers": [], "global_pause": False}
-
-
     else:
             data = {}
         
