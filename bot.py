@@ -170,11 +170,12 @@ def webhook():
                                 if is_duplicate(msg_id):
                                     print(f"DUPLICATE IMEZUIWA: {msg_id}")
                                     continue
+                                ai_reply = get_ai_reply(msg_body)
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
                                 save_chat(business_id, from_num, "customer", msg_body)
 
-                                save_chat(business_id, from_num, "bot", get_ai_reply)
+                                save_chat(business_id, from_num, "bot", ai_reply)
                                 if not msg_body and msg.get("image"):
                                     msg_body = msg.get("image", {}).get("caption", "")
                                     image_id = msg.get("image", {}).get("id")
