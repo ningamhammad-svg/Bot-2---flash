@@ -179,12 +179,7 @@ def webhook():
                                 if not msg_body and msg.get("image"):
                                     msg_body = msg.get("image", {}).get("caption", "")
                                     image_id = msg.get("image", {}).get("id")
-                               def is_bot_paused_(from_num):
-                                   return False
-                                if is_bot_paused(from_num):
-                                   print(f"BOT AMELALA kwa {from_num} - Sijibu, bosi anaongea")
-                                   save_chat(PHONE_NUMBER_ID, from_num, "customer", msg_body)
-                                   return "OK" # usijibu
+                              
                                 lower = msg_body.lower()
                                 reply_text = ""
                                 business_id = None
@@ -228,6 +223,13 @@ def webhook():
     except Exception as e:
              print(f"ERROR: {e}")     
     return "OK", 200  
+def is_bot_paused_(from_num):
+                                   return False
+                                if is_bot_paused(from_num):
+                                   print(f"BOT AMELALA kwa {from_num} - Sijibu, bosi anaongea")
+                                   save_chat(PHONE_NUMBER_ID, from_num, "customer", msg_body)
+                                   return "OK" # usijibu
+
 def save_chat(business_id, customer_number, role, text):
     data = {}
     if os.path.exists(CHATS_FILE):
