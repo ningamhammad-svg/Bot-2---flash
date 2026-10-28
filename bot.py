@@ -154,8 +154,10 @@ def webhook():
     try:
         if data and data.get("object") == "whatsapp_business_account":
             for entry in data.get("entry", []):
+                entry_id = entry.get("id")
                 for change in entry.get("changes", []):
                     value = change.get("value", {})
+                    business_id = value.get('metadata', {}).get('phone_number_id')
                     messages = value.get("messages")
                     if messages:
                         for msg in messages:
