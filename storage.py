@@ -21,8 +21,8 @@ def is_bot_paused(from_num):
     control = get_control_data()
     return from_num in control.get("paused_customers", [])
 
-def save_chat(business_id, customer_number, role, text):
-    if not business_id or not customer_number or not text:
+def save_chat( customer_number, role, text):
+    if not customer_number or not text:
         return
     data = {}
     if os.path.exists(CHATS_FILE):
@@ -32,17 +32,16 @@ def save_chat(business_id, customer_number, role, text):
         except:
             data = {}
     
-    if business_id not in data:
-        data[business_id] = {}
+
     if customer_number not in data[business_id]:
         data[business_id][customer_number] = []
     
-    data[business_id][customer_number].append({
+    data[customer_number].append({
         "role": role,
         "msg": text,
         "time": datetime.now().strftime("%H:%M %d/%m")
     })
-    data[business_id][customer_number] = data[business_id][customer_number][-30:]
+    data[customer_number] = data[customer_number][-30:]
     
     with open(CHATS_FILE, 'w') as f:
         json.dump(data, f)
