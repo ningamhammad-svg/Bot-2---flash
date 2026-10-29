@@ -6,14 +6,14 @@ admin_bp = Blueprint('admin', __name__)
 VERIFY_TOKEN = os.getenv("VERIFY_TOKEN", "NEGRO342")
 
 @admin_bp.route('/admin/<business_id>')
-def admin_panel(business_id):
+def admin_panel(phone_number_id):
     token = request.args.get("token")
     if token != VERIFY_TOKEN:
         return "Token si sahihi", 403
     
     chats_data = get_all_chats()
     control_data = get_control_data()
-    all_chats = chats_data.get(business_id, {})
+    all_chats = chats_data.get(phone_number_id, {})
     
     html_content = ''
     for cust_num, chats in all_chats.items():
@@ -34,7 +34,7 @@ def admin_panel(business_id):
     <html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>NCIP ADMIN</title></head>
     <body style="font-family:sans-serif;background:#0f172a;color:white;padding:10px">
     <div style="background:linear-gradient(90deg,#ff8a00,#2b6cb0);padding:15px;border-radius:12px;text-align:center">
-    <h2>NCIP - BOT CONTROL</h2><p>{business_id}</p></div>
+    <h2>NCIP - BOT CONTROL</h2><p>{phone_number_id}</p></div>
     <h3 style="text-align:center">Wateja: {len(all_chats)}</h3>
     {html_content}
     </body></html>
@@ -42,7 +42,7 @@ def admin_panel(business_id):
     return full_html
 
 @admin_bp.route('/admin/<business_id>/control')
-def admin_control(business_id):
+def admin_control(phone_number_id):
     token = request.args.get("token")
     action = request.args.get("action")
     customer = request.args.get("customer")
@@ -56,4 +56,4 @@ def admin_control(business_id):
         if customer in control["paused_customers"]:
             control["paused_customers"].remove(customer)
     save_control_data(control)
-    return f'<script>alert("Imefanikiwa: {action}"); window.location.href="/admin/{business_id}?token={token}";</script>'
+    return f'<script>alert("Imefanikiwa: {action}"); window.location.href="/admin/{phone_number_id}?token={token}";</script>'
