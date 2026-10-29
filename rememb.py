@@ -1,18 +1,10 @@
-import json, requests
+import json, 
 import os
 from datetime import datetime
 
 MEMORY_DIR = "memory_data"
 os.makedirs(MEMORY_DIR, exist_ok=True)
-data = requests.get_json()
-for entry in data.get("entry", []):
-    entry_id = entry.get("id")
-    business_id = None
-    try:
-        business_id = value.get('messages', {}).get('PHONE_NUMBER_ID')
-    except:
-        business_id = entry.get('id')
-if not business_id:
+
     business_id = PHONE_NUMBER_ID
 def _get_memory_file(business_id, from_num):
     safe_id = str(business_id).replace("/", "_")
