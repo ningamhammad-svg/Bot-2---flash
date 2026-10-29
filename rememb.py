@@ -51,7 +51,7 @@ def format_memory_for_ai(from_num):
         lines.append(f"{role}: {h['content']}")
     return "\n".join(lines)
 
-def clear_memory(business_id, from_num):
+def clear_memory(from_num):
     file_path = _get_memory_file(from_num)
     if os.path.exists(file_path):
         os.remove(file_path)
