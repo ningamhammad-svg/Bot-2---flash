@@ -45,7 +45,7 @@ SYSTEM_PROMPT = """
      6.usimtumie message mteja kama hajakutafuta mwenyewe.
      7.usitume message nyinyi kwa wakati mmoja
      """
-def get_ai_reply(business_id, from_num, msg_body):
+def get_ai_reply(user_message):
     kumbukumbu = format_memory_for_ai(business_id, from_num)
     
     prompt = f"""
@@ -61,7 +61,7 @@ def get_ai_reply(business_id, from_num, msg_body):
            model_name="gemini-3.1-flash-lite",
            system_instruction=SYSTEM_PROMPT
        )
-       response = model.generate_content(business_id, from_num, msg_body)
+       response = model.generate_content(user_message)
        return response.text
     except Exception as e:
         print(f"ERROR: {e}")
@@ -190,7 +190,7 @@ def webhook():
                                 print(f"BOT AMELALA kwa {from_num}")
                                 continue   
                         
-                            ai_reply = get_ai_reply(business_id, from_num, msg_body)
+                            ai_reply = get_ai_reply(user_message)
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "")
                             save_to_memory(business_id, from_num, "customer", msg_body) 
