@@ -46,7 +46,7 @@ SYSTEM_PROMPT = """
      7.usitume message nyinyi kwa wakati mmoja
      """
 def get_ai_reply(user_message):
-    kumbukumbu = format_memory_for_ai(business_id, from_num)
+    kumbukumbu = format_memory_for_ai(from_num)
     
     prompt = f"""
     Wewe ni msaidizi wa duka.
@@ -133,7 +133,7 @@ def tuma_picha_local(to, file_path, caption=""):
 app = Flask(__name__)
 processed_message = set()
 PRODUCTS_FOLDER = "products"
-user_message = (business_id, from_num,msg_body)
+user_message = (from_num,msg_body)
 def is_duplicate(message_id):
     if message_id in processed_message:
         return True
@@ -172,13 +172,6 @@ def webhook():
                     messages = value.get("messages")
                     if messages:
                         for msg in messages:
-                            business_id = None
-                            try:
-                                business_id = value.get('messages', {}).get('phone_number_id')
-                            except:
-                                business_id = entry.get('id')
-                            if not business_id:
-                                business_id = PHONE_NUMBER_ID
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")
                             if msg_body:
@@ -194,10 +187,10 @@ def webhook():
                             ai_reply = get_ai_reply(user_message)
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "")
-                            save_to_memory(business_id, from_num, "customer", msg_body) 
+                            save_to_memory(from_num, "customer", msg_body) 
                             reply = get_ai_reply(msg_body) 
                             send_whatsapp_reply(from_num, reply)
-                            save_to_memory(business_id, from_num, "bot", reply)
+                            save_to_memory(from_num, "bot", reply)
                             if not msg_body and msg.get("image"):
                                 msg_body = msg.get("image", {}).get("caption", "")
                                 image_id = msg.get("image", {}).get("id")
