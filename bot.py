@@ -222,9 +222,9 @@ def webhook():
                                 tuma_picha_local(from_num, "products/iPhone.jpg", "iPhone Pro Max - Tsh. 780k, Original na warranty")
                             elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
                                 tuma_picha_local(from_num, "products/iPhone.jpg", "Hizi hapa bidhaa zetu maarufu")
-                           else:
-                               reply = get_ai_reply(msg_body)
-                               send_whatsapp_reply(from_num, reply)
+                            else:
+                                reply = get_ai_reply(msg_body)
+                                send_whatsapp_reply(from_num, reply)
     except Exception as e:
         print(f"ERROR: {e}")     
     return "OK", 200  
