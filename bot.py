@@ -45,7 +45,7 @@ SYSTEM_PROMPT = """
      6.usimtumie message mteja kama hajakutafuta mwenyewe.
      7.usitume message nyinyi kwa wakati mmoja
      """
-def get_ai_reply(user_message):
+def get_ai_reply(business_id, from_num, msg_body):
     kumbukumbu = format_memory_for_ai(business_id, from_num)
     
     prompt = f"""
