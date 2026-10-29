@@ -133,6 +133,7 @@ def tuma_picha_local(to, file_path, caption=""):
 app = Flask(__name__)
 processed_message = set()
 PRODUCTS_FOLDER = "products"
+user_message = (business_id, from_num,msg_body)
 def is_duplicate(message_id):
     if message_id in processed_message:
         return True
