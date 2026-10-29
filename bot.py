@@ -173,7 +173,7 @@ def webhook():
                         for msg in messages:
                             business_id = None
                             try:
-                                business_id = value.get('messages', {}).get('PHONE_NUMBER_ID')
+                                business_id = value.get('messages', {}).get('phone_number_id')
                             except:
                                 business_id = entry.get('id')
                             if not business_id:
@@ -190,7 +190,7 @@ def webhook():
                                 print(f"BOT AMELALA kwa {from_num}")
                                 continue   
                         
-                                ai_reply = get_ai_reply(business_id, from_num,msg_body)
+                                ai_reply = get_ai_reply(user_message)
                                 from_num = msg.get("from")
                                 msg_body = msg.get("text", {}).get("body", "")
                             save_to_memory(business_id, from_num, "customer", msg_body) 
@@ -222,9 +222,9 @@ def webhook():
                                 tuma_picha_local(from_num, "products/iPhone.jpg", "iPhone Pro Max - Tsh. 780k, Original na warranty")
                             elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
                                 tuma_picha_local(from_num, "products/iPhone.jpg", "Hizi hapa bidhaa zetu maarufu")
-                            else:
-                                reply = get_ai_reply(msg_body)
-                                send_whatsapp_reply(from_num, reply)
+                     else:
+                         reply = get_ai_reply(msg_body)
+                         send_whatsapp_reply(from_num, reply)
     except Exception as e:
         print(f"ERROR: {e}")     
     return "OK", 200  
