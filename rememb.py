@@ -1,4 +1,4 @@
-import json, request
+import json, requests
 import os
 from datetime import datetime
 
