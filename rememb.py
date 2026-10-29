@@ -5,14 +5,12 @@ from datetime import datetime
 MEMORY_DIR = "memory_data"
 os.makedirs(MEMORY_DIR, exist_ok=True)
 PHONE_NUMBER_ID = os.getenv("PHONE_NUMBER_ID")
-business_id = PHONE_NUMBER_ID
-def _get_memory_file(business_id, from_num):
-    safe_id = str(business_id).replace("/", "_")
+def _get_memory_file(from_num):
     safe_num = str(from_num).replace("/", "_")
-    return os.path.join(MEMORY_DIR, f"{safe_id}_{safe_num}.json")
+    return os.path.join(MEMORY_DIR, f"{safe_num}.json")
 
-def get_user_memory(business_id, from_num, limit=20):
-    file_path = _get_memory_file(business_id, from_num)
+def get_user_memory(from_num, limit=20):
+    file_path = _get_memory_file(from_num)
     if not os.path.exists(file_path):
         return []
     try:
@@ -22,10 +20,10 @@ def get_user_memory(business_id, from_num, limit=20):
     except:
         return []
 
-def save_to_memory(business_id, from_num, role, content):
+def save_to_memory(from_num, role, content):
     if not content or not content.strip():
         return
-    file_path = _get_memory_file(business_id, from_num)
+    file_path = _get_memory_file(from_num)
     history = []
     if os.path.exists(file_path):
         try:
@@ -43,8 +41,8 @@ def save_to_memory(business_id, from_num, role, content):
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(history, f, ensure_ascii=False, indent=2)
 
-def format_memory_for_ai(business_id, from_num):
-    history = get_user_memory(business_id, from_num, limit=10)
+def format_memory_for_ai(from_num):
+    history = get_user_memory(from_num, limit=10)
     if not history:
         return ""
     lines = []
@@ -54,6 +52,6 @@ def format_memory_for_ai(business_id, from_num):
     return "\n".join(lines)
 
 def clear_memory(business_id, from_num):
-    file_path = _get_memory_file(business_id, from_num)
+    file_path = _get_memory_file(from_num)
     if os.path.exists(file_path):
         os.remove(file_path)
