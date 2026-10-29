@@ -5,7 +5,7 @@ from datetime import datetime
 MEMORY_DIR = "memory_data"
 os.makedirs(MEMORY_DIR, exist_ok=True)
 
-    business_id = PHONE_NUMBER_ID
+business_id = PHONE_NUMBER_ID
 def _get_memory_file(business_id, from_num):
     safe_id = str(business_id).replace("/", "_")
     safe_num = str(from_num).replace("/", "_")
