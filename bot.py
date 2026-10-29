@@ -188,7 +188,7 @@ def webhook():
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "")
                             save_to_memory(from_num, "customer", msg_body) 
-                            reply = get_ai_reply(msg_body) 
+                            reply = get_ai_reply(from_num,msg_body) 
                             send_whatsapp_reply(from_num, reply)
                             save_to_memory(from_num, "bot", reply)
                             if not msg_body and msg.get("image"):
