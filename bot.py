@@ -133,7 +133,7 @@ def tuma_picha_local(to, file_path, caption=""):
 app = Flask(__name__)
 processed_message = set()
 PRODUCTS_FOLDER = "products"
-user_message = (from_num,msg_body)
+
 def is_duplicate(message_id):
     if message_id in processed_message:
         return True
@@ -161,6 +161,7 @@ def verify():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
+    user_message = (from_num,msg_body)
     data = request.get_json()
     print(f"INCOMING: {data}")  # <-- HII NDIO ULIYOZUNGUSHIA, IPO HAPA
     try:
