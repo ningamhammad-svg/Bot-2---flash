@@ -45,7 +45,7 @@ SYSTEM_PROMPT = """
      6.usimtumie message mteja kama hajakutafuta mwenyewe.
      7.usitume message nyinyi kwa wakati mmoja
      """
-def get_ai_reply(user_message):
+def get_ai_reply(from_num, msg_body):
     kumbukumbu = format_memory_for_ai(from_num)
     
     prompt = f"""
@@ -161,7 +161,6 @@ def verify():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    user_message = (from_num,msg_body)
     data = request.get_json()
     print(f"INCOMING: {data}")  # <-- HII NDIO ULIYOZUNGUSHIA, IPO HAPA
     try:
@@ -185,7 +184,7 @@ def webhook():
                                 print(f"BOT AMELALA kwa {from_num}")
                                 continue   
                         
-                            ai_reply = get_ai_reply(user_message)
+                            ai_reply = get_ai_reply(from_num, msg_body)
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "")
                             save_to_memory(from_num, "customer", msg_body) 
