@@ -4,7 +4,7 @@ from datetime import datetime
 
 MEMORY_DIR = "memory_data"
 os.makedirs(MEMORY_DIR, exist_ok=True)
-data = request.get_json()
+data = requests.get_json()
 for entry in data.get("entry", []):
     entry_id = entry.get("id")
     business_id = None
