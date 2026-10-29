@@ -190,9 +190,9 @@ def webhook():
                                 print(f"BOT AMELALA kwa {from_num}")
                                 continue   
                         
-                                ai_reply = get_ai_reply(user_message)
-                                from_num = msg.get("from")
-                                msg_body = msg.get("text", {}).get("body", "")
+                            ai_reply = get_ai_reply(user_message)
+                            from_num = msg.get("from")
+                            msg_body = msg.get("text", {}).get("body", "")
                             save_to_memory(business_id, from_num, "customer", msg_body) 
                             reply = get_ai_reply(msg_body) 
                             send_whatsapp_reply(from_num, reply)
@@ -201,11 +201,11 @@ def webhook():
                                 msg_body = msg.get("image", {}).get("caption", "")
                                 image_id = msg.get("image", {}).get("id")
                               
-                                lower = msg_body.lower()
-                                print(f"MESSAGE FROM {from_num}: {msg_body}")
-                                order_keywords = ["order", "nitanunua", "namuhitaji boss", "nahitaji delivery", "nataka", "ninataka", "naomba", "nauza", "bei", "nitalipa", 
+                            lower = msg_body.lower()
+                            print(f"MESSAGE FROM {from_num}: {msg_body}")
+                            order_keywords = ["order", "nitanunua", "namuhitaji boss", "nahitaji delivery", "nataka", "ninataka", "naomba", "nauza", "bei", "nitalipa", 
                                                   "nimeshalipa", "lipa", "nunua", "book", "agiza"] 
-                                shida_keywords = ["shida", "haifanyi", "mbovu", "tatizo", "imekataa", "malalamiko", "mwizi", "haijafika",
+                            shida_keywords = ["shida", "haifanyi", "mbovu", "tatizo", "imekataa", "malalamiko", "mwizi", "haijafika",
                                                   "complaint", "help"]
                             if any(k in lower for k in order_keywords):
                                 tuma_alert_kwa_mmiliki(from_num, msg_body, "ORDER") 
