@@ -61,7 +61,7 @@ def get_ai_reply(business_id, from_num, msg_body):
            model_name="gemini-3.1-flash-lite",
            system_instruction=SYSTEM_PROMPT
        )
-       response = model.generate_content(user_message)
+       response = model.generate_content(business_id, from_num, msg_body)
        return response.text
     except Exception as e:
         print(f"ERROR: {e}")
