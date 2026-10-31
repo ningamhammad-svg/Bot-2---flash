@@ -235,8 +235,8 @@ def webhook():
                               
                             lower = msg_body.lower()
                             print(f"MESSAGE FROM {from_num}: {msg_body}")
-                            order_keywords = ["order", "nitanunua", "namuhitaji boss", "nahitaji delivery", "nataka", "ninataka", "naomba", "nauza", "bei", "nitalipa", 
-                                                  "nimeshalipa", "lipa", "nunua", "book", "agiza"] 
+                            order_keywords = [ "namuhitaji boss", "nahitaji delivery", "nitalipa", 
+                                                  "nimeshalipa", "agiza"] 
                             shida_keywords = ["shida", "haifanyi", "mbovu", "tatizo", "imekataa", "malalamiko", "mwizi", "haijafika",
                                                   "complaint", "help"]
                             if any(k in lower for k in order_keywords):
