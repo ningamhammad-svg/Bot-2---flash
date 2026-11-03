@@ -237,6 +237,14 @@ def webhook():
                             if any(k in lower for k in keywords):
                                 print(">>>NINATUMA LOCATION<<<")
                                 tuma_location(from_num)
+                            elif "iPhone" in lower:
+   
+                                picha_za_iphone = glob.glob("products/iPhone*.jpg") + glob.glob("products/iPhone*.png")
+                                if picha_za_iphone:
+                                    for picha in picha_za_iphone[:5]: # tuma 5 za kwanza usijaze bando
+                                    tuma_picha_local(from_num, picha, "iPhone Pro Max - Tsh. 780k, Original na warranty")
+                                else:
+                                    tuma_picha_local(from_num, "products/iPhone.jpg", "iPhone Pro Max - Tsh. 780k, Original na warranty")
                             elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
                                 bidhaa_zote = glob.glob("products/*.*")
                                 for picha in bidhaa_zote[:7]: # tuma 7 tu, WhatsApp inachoka zikiwa nyingi sana
