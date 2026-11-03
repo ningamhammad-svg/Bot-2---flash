@@ -251,6 +251,7 @@ def webhook():
                                 bidhaa_zote = glob.glob("products/*.*")
                                 for picha in bidhaa_zote[:7]: # tuma 7 tu, WhatsApp inachoka zikiwa nyingi sana
                                     tuma_picha_local(from_num, picha, "Hizi hapa bidhaa zetu maarufu")
+                                return
                             else:
                                 reply = get_ai_reply(msg_body)
                                 memory.add_message(from_num, "bot", reply)
