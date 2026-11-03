@@ -222,7 +222,7 @@ def webhook():
                               
                             lower = msg_body.lower()
                             print(f"MESSAGE FROM {from_num}: {msg_body}")
-                            order_keywords = [ "namuhitaji boss", " nahitaji delivery","niletee mzigo" 
+                            order_keywords = ["order", "nitanunua", "namuhitaji boss", "nahitaji delivery" "nimelipa", 
                                                   "nimeshalipa"] 
                             shida_keywords = ["shida", "haifanyi", "mbovu", "tatizo", "imekataa", "malalamiko", "mwizi", "haijafika",
                                                   "complaint", "help"]
@@ -230,7 +230,6 @@ def webhook():
                                 tuma_alert_kwa_mmiliki(from_num, msg_body, "ORDER") 
                             elif any(k in lower for k in shida_keywords):
                                 tuma_alert_kwa_mmiliki(from_num, msg_body, "SHIDA") 
-                                
                             keywords = ["location", "Google", "map","ziko","duka","mnako","mko","patikana","address","link", "ramani",
                                             "mko wapi", "mnakopatikana", "mko wapi", "duka liko wapi", "mahali mlipo" "ofisi zenu", "kufika",
                                            "where","locate","located","pin","come","direction","find you","office","shop"]
