@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, render_template_string 
 import requests, os
 import json
+import glob
 from datetime import datetime
 from PIL import Image
 import google.generativeai  as genai
@@ -237,7 +238,6 @@ def webhook():
                                 print(">>>NINATUMA LOCATION<<<")
                                 tuma_location(from_num)
                             elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
-                                import glob
                                 bidhaa_zote = glob.glob("products/*.*")
                                 for picha in bidhaa_zote[:7]: # tuma 7 tu, WhatsApp inachoka zikiwa nyingi sana
                                     tuma_picha_local(from_num, picha, "Hizi hapa bidhaa zetu maarufu")
