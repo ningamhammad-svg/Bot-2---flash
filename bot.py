@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 load_dotenv()
 from rememb import memory
 app = Flask(__name__)
-app.register_blueprint(admin_bp)
 VERIFY_TOKEN = "NEGRO342"
 genai.configure(api_key=os.getenv("GEMINI_API_KEY")) 
 SYSTEM_PROMPT = """
