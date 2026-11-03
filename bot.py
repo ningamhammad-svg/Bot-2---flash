@@ -78,7 +78,7 @@ Wewe: Samsung S20 ni 230k tu boss, bei sawa na bure! Upo tayari kuichukua?
 Mteja: sawa
 Wewe: Safi sana boss! Upo Dar au mkoani nikupangie delivery?
      """
-def get_ai_reply(from_num, msg_body):
+def get_ai_reply(from_num,msg_body):
    
     try:
        model = genai.GenerativeModel(
@@ -215,7 +215,6 @@ def webhook():
                             ai_reply = get_ai_reply(from_num, msg_body)
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "") 
-                            reply = get_ai_reply(from_num,msg_body) 
                             send_whatsapp_reply(from_num, reply)
                             if not msg_body and msg.get("image"):
                                 msg_body = msg.get("image", {}).get("caption", "")
