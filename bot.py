@@ -51,9 +51,6 @@ AKILI YA KUTAMBUA NIA (INTENT - HII NDIO SIRI YAKO):
 5. Mteja akiuliza "mko wapi / location / ofisi":
    -> USITAJE mtaa. Jibu: "Tupo Dar es Salaam boss, & mtumie location via google Map"
 
-6. Mteja akiuliza "delivery / mzigo napataje":
-   -> Jibu: "Delivery zinapatikana boss, tunafanya kazi TZ nzima. Upo mkoa gani?"
-
 7. Mteja akiuliza "nalipiaje / lipa / malipo":
    -> Jibu: "Malipo ni Airtel Money +255 780244426 Jina Mohamedi Musa. Ukishalipia nitumie screenshot boss nimpe Boss wangu akuletee mzigo"
 
@@ -225,8 +222,8 @@ def webhook():
                               
                             lower = msg_body.lower()
                             print(f"MESSAGE FROM {from_num}: {msg_body}")
-                            order_keywords = [ "namuhitaji boss", "nahitaji delivery", "nitalipa", 
-                                                  "nimeshalipa", "agiza"] 
+                            order_keywords = [ "namuhitaji boss", " nahitaji delivery","niletee mzigo" 
+                                                  "nimeshalipa"] 
                             shida_keywords = ["shida", "haifanyi", "mbovu", "tatizo", "imekataa", "malalamiko", "mwizi", "haijafika",
                                                   "complaint", "help"]
                             if any(k in lower for k in order_keywords):
