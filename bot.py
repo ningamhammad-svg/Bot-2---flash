@@ -253,7 +253,7 @@ def webhook():
                                     tuma_picha_local(from_num, picha, "Hizi hapa bidhaa zetu maarufu")
                                 return
                             else:
-                                reply = get_ai_reply(msg_body)
+                                reply = get_ai_reply(from_num, msg_body)
                                 memory.add_message(from_num, "bot", reply)
                                 send_whatsapp_reply(from_num, reply)
     except Exception as e:
