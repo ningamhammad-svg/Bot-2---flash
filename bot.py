@@ -238,7 +238,7 @@ def webhook():
                                 print(">>>NINATUMA LOCATION<<<")
                                 tuma_location(from_num)
                             elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
-                                import os, glob
+                                import glob
                                 bidhaa_zote = glob.glob("products/*.*")
                                 for picha in bidhaa_zote[:7]: # tuma 7 tu, WhatsApp inachoka zikiwa nyingi sana
                                     tuma_picha_local(from_num, picha, "Hizi hapa bidhaa zetu maarufu")
