@@ -161,4 +161,4 @@ def register_admin(app, memory, send_whatsapp_reply):
         msgs = memory.get_history(uid)
         is_paused = uid in memory.paused_users
 
-        return render_template_string(CHAT
+        return render_template_string(CHAT_HTML, uid=uid, msgs=msgs, is_paused=is_paused, pwd=ADMIN_PASSWORD, profile={})
