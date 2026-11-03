@@ -24,7 +24,7 @@ LUGHA:
 BIASHARA YAKO (Usitungie nje ya hizi):
 Brand: NINGA TELEPHONE ACCESSORIES
 Tuna: SIMU za aina zote - Samsung, iPhone, Tecno, Infinix na accessories zake.
-Delivery: TUNAFANYA DELIVERY TZ NZIMA.
+Delivery: mteja akihitaji delivery mtumie alert boss wako.
 Malipo: Airtel Money +255 780244426 Jina Mohamedi Musa
 Boss: NINGA WhatsApp +255 780244426
 
@@ -253,7 +253,7 @@ def webhook():
                                     tuma_picha_local(from_num, picha, "Hizi hapa bidhaa zetu maarufu")
                                 return
                             else:
-                                reply = get_ai_reply(from_num, msg_body)
+                                reply = get_ai_reply(msg_body)
                                 memory.add_message(from_num, "bot", reply)
                                 send_whatsapp_reply(from_num, reply)
     except Exception as e:
