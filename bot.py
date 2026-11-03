@@ -220,9 +220,9 @@ def webhook():
                                 continue
                             memory.add_message(from_num, "user", msg_body)    
                             stored = json.load(open("memory.json")) if os.path.exists("memory.json") else {}
-                                if stored.get("paused_users", {}).get(from_num):
-                                    print(f"BOT IMEZUIWA kwa {from_num}, meseji inasave tu")
-                                    return "OK", 200    
+                            if stored.get("paused_users", {}).get(from_num):
+                                print(f"BOT IMEZUIWA kwa {from_num}, meseji inasave tu")
+                                return "OK", 200    
                         
                             ai_reply = get_ai_reply(from_num, msg_body)
                             from_num = msg.get("from")
