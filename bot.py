@@ -6,9 +6,7 @@ from PIL import Image
 import google.generativeai  as genai
 from dotenv import load_dotenv
 load_dotenv()
-from storage import save_chat, is_bot_paused, get_control_data
-from admin import admin_bp
-from rememb import save_to_memory, format_memory_for_ai, clear_memory
+from rememb import memory
 app = Flask(__name__)
 app.register_blueprint(admin_bp)
 VERIFY_TOKEN = "NEGRO342"
@@ -184,6 +182,8 @@ WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN")
 PHONE_NUMBER_ID = os.getenv("PHONE_NUMBER_ID")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 OWNER_NUMBER = os.getenv("OWNER_NUMBER", "255780244426")
+from admin import register_admin
+register_admin(app, memory, send_whatsapp_reply)
 @app.route("/")
 def home():
     return "Ninga Bot is Live! ✅", 200
@@ -218,9 +218,11 @@ def webhook():
                             if is_duplicate(msg_id):
                                 print(f"DUPLICATE IMEZUIWA: {msg_id}")
                                 continue
-                            if is_bot_paused(from_num):
-                                print(f"BOT AMELALA kwa {from_num}")
-                                continue   
+                            memory.add_message(from_num, "user", msg_body)    
+                                stored = json.load(open("memory.json")) if os.path.exists("memory.json") else {}
+                                if stored.get("paused_users", {}).get(from_num):
+                                    print(f"BOT IMEZUIWA kwa {from_num}, meseji inasave tu")
+                                    return "OK", 200    
                         
                             ai_reply = get_ai_reply(from_num, msg_body)
                             from_num = msg.get("from")
@@ -256,6 +258,7 @@ def webhook():
                                 tuma_picha_local(from_num, "products/iPhone.jpg", "Hizi hapa bidhaa zetu maarufu")
                             else:
                                 reply = get_ai_reply(msg_body)
+                                memory.add_message(from_num, "bot", reply)
                                 send_whatsapp_reply(from_num, reply)
     except Exception as e:
         print(f"ERROR: {e}")     
