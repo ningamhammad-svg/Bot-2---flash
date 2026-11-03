@@ -237,10 +237,11 @@ def webhook():
                             if any(k in lower for k in keywords):
                                 print(">>>NINATUMA LOCATION<<<")
                                 tuma_location(from_num)
-                            elif "iPhone" in lower:
-                                tuma_picha_local(from_num, "products/iPhone.jpg", "iPhone Pro Max - Tsh. 780k, Original na warranty")
                             elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
-                                tuma_picha_local(from_num, "products/iPhone.jpg", "Hizi hapa bidhaa zetu maarufu")
+                                import os, glob
+                                bidhaa_zote = glob.glob("products/*.*")
+                                for picha in bidhaa_zote[:7]: # tuma 7 tu, WhatsApp inachoka zikiwa nyingi sana
+                                    tuma_picha_local(from_num, picha, "Hizi hapa bidhaa zetu maarufu")
                             else:
                                 reply = get_ai_reply(msg_body)
                                 memory.add_message(from_num, "bot", reply)
