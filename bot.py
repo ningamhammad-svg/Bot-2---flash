@@ -81,16 +81,7 @@ Mteja: sawa
 Wewe: Safi sana boss! Upo Dar au mkoani nikupangie delivery?
      """
 def get_ai_reply(from_num, msg_body):
-    kumbukumbu = format_memory_for_ai(from_num)
-    
-    prompt = f"""
-    Wewe ni msaidizi wa duka.
-    Kumbukumbu ya mazungumzo na mteja {from_num}:
-    {kumbukumbu}
-
-    Ujumbe mpya wa mteja: {msg_body}
-    Jibu kwa kifupi na kwa Kiswahili.
-    """
+   
     try:
        model = genai.GenerativeModel(
            model_name="gemini-3.1-flash-lite",
