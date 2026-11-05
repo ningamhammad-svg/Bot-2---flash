@@ -90,8 +90,19 @@ Wewe: Samsung S20 ni 230k tu boss, bei sawa na bure! Upo tayari kuichukua?
 Mteja: sawa
 Wewe: Safi sana boss! Upo Dar au mkoani nikupangie delivery?
      """
-def get_ai_reply(from_num,msg_body):
+def get_ai_reply(from_num, msg_body):
     kumbukumbu = memory.get_history_text(from_num)
+
+    prompt = f"""Wewe ni Ahmed wa NINGA TELEPHONE ACCESSORIES.
+Mazungumzo yaliyopita:
+{kumbukumbu}
+
+Sasa mteja kasema: {msg_body}
+Jibu kwa kutumia kumbukumbu hiyo. Kama alishakuambia jina lake, usimuulize tena."""
+
+    response = model.generate_content(prompt)
+    return response.text
+
     try:
        model = genai.GenerativeModel(
            model_name="gemini-3.1-flash-lite",
