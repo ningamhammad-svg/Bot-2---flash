@@ -92,13 +92,17 @@ Wewe: Safi sana boss! Upo Dar au mkoani nikupangie delivery?
      """
 def get_ai_reply(from_num, msg_body):
     kumbukumbu = memory.get_history_text(from_num)
+    prompt = f"""Mazungumzo yaliyopita na huyu mteja:
+{kumbukumbu}
 
+Sasa mteja kasema: {msg_body}
+Jibu kwa kutumia kumbukumbu hiyo. Kama alishakuambia jina lake, usimuulize tena, mtumie hilo jina."""
     try:
        model = genai.GenerativeModel(
            model_name="gemini-3.1-flash-lite",
            system_instruction=SYSTEM_PROMPT
        )
-       response = model.generate_content(msg_body)
+       response = model.generate_content(prompt)
        return response.text
     except Exception as e:
         print(f"ERROR: {e}")
