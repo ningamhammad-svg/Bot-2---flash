@@ -215,7 +215,7 @@ def webhook():
                             reply = get_ai_reply(from_num, msg_body)
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "") 
-                            send_whatsapp_reply(from_num, reply)
+                           
                             if not msg_body and msg.get("image"):
                                 msg_body = msg.get("image", {}).get("caption", "")
                                 image_id = msg.get("image", {}).get("id")
