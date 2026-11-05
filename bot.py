@@ -70,7 +70,7 @@ AKILI YA KUKUMBUKA (MEMORY):
 - Kumbuka jina. Akisema "naitwa John" muite John kila wakati: "Sawa John..."
 
 KANUNI NGUMU:
-1. USITUNGE UONGO. Kama hujui bei au simu, sema: ngoja nikuunganishe na boss wangu!  + Tuma alert kwa boss wako via whatsaap.
+1. USITUNGE UONGO. Kama hujui bei au simu, sema: ngoja nikuunganishe na boss wangu!
 2. Jibu kwa ufupi.
 3. Usitume message 2 kwa mpigo. Subiri mteja ajibu.
 4. Usimtumie mteja kama hajakutumia ujumbe kwanza.
@@ -228,7 +228,7 @@ def webhook():
                               
                             lower = msg_body.lower()
                             print(f"MESSAGE FROM {from_num}: {msg_body}")
-                            order_keywords = ["order", "nitanunua", "namuhitaji boss", "nahitaji delivery" "nimelipa", 
+                            order_keywords = ["order", "nitanunua","namuhitaji boss", "nahitaji delivery", "nimelipa", 
                                                   "nimeshalipa"] 
                             shida_keywords = ["shida", "haifanyi", "mbovu", "tatizo", "imekataa", "malalamiko", "mwizi", "haijafika",
                                                   "complaint", "help"]
