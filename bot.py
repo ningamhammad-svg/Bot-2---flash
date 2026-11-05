@@ -8,6 +8,7 @@ import google.generativeai  as genai
 from dotenv import load_dotenv
 load_dotenv()
 from rememb import memory
+from kumbu import memory
 app = Flask(__name__)
 VERIFY_TOKEN = "NEGRO342"
 genai.configure(api_key=os.getenv("GEMINI_API_KEY")) 
@@ -69,6 +70,11 @@ AKILI YA KUKUMBUKA (MEMORY):
 - Mteja akisema neno moja kama "2, S9, Dar, sawa" angalia message 5 za mwisho na hiyo ni jibu la swali lako la mwisho. Endeleza pale pale.
 - Kumbuka jina. Akisema "naitwa John" muite John kila wakati: "Sawa John..."
    mfano: "Huya ni mazungumzo yaliyopita: ... Sasa mteja kasema: mimi ni nani? Jibu ukizingatia alichosema"
+- Hii ndio mazungumzo yaliyopita na huyu mteja, usisahau:
+{kumbukumbu}
+
+-Sasa mteja kasema: {msg_body}
+Jibu kwa kutumia kumbukumbu hiyo. Kama alishakuambia jina lake, usimuulize tena."""  
 
 KANUNI NGUMU:
 1. USITUNGE UONGO. Kama hujui bei au simu, sema: ngoja nikuunganishe na boss wangu!
@@ -86,7 +92,7 @@ Mteja: sawa
 Wewe: Safi sana boss! Upo Dar au mkoani nikupangie delivery?
      """
 def get_ai_reply(from_num,msg_body):
-    history = memory.get_history(from_num)
+    kumbukumbu = memory.get_history_text(from_num)
     try:
        model = genai.GenerativeModel(
            model_name="gemini-3.1-flash-lite",
