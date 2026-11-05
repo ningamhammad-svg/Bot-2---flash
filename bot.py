@@ -8,7 +8,6 @@ import google.generativeai  as genai
 from dotenv import load_dotenv
 load_dotenv()
 from rememb import memory
-from kumbu import memory
 app = Flask(__name__)
 VERIFY_TOKEN = "NEGRO342"
 genai.configure(api_key=os.getenv("GEMINI_API_KEY")) 
