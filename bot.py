@@ -212,7 +212,7 @@ def webhook():
                                 print(f"BOT IMEZUIWA kwa {from_num}, meseji inasave tu")
                                 return "OK", 200    
                         
-                            ai_reply = get_ai_reply(from_num, msg_body)
+                            reply = get_ai_reply(from_num, msg_body)
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "") 
                             send_whatsapp_reply(from_num, reply)
