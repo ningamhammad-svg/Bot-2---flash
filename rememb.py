@@ -55,6 +55,15 @@ def get_history(uid):
     """Rudisha history yote ya huyu user, AI atasoma zote"""
     # Tunamrudishia zote, sio 15 tu, ili akumbuke vizuri
     return chat.get(uid, [])
+    
+def get_history_text(uid):
+    """Hii ndio AI itaitumia kukumbuka sms 5-6 za mwisho"""
+    history = chat.get(uid, [])[-12:]  # 12 = sms 6 za mteja + 6 za bot
+    lines = []
+    for h in history:
+        jina = "Mteja" if h["role"] == "user" else "Bot"
+        lines.append(f"{jina}: {h['text']}")
+    return "\n".join(lines)    
 
 def add(uid, role, text, source="BOT"):
     """Save chat ya mtu yeyote generally"""
@@ -96,6 +105,7 @@ memory = type("", (), {
     "is_duplicate": staticmethod(is_dup),
     "get_history": staticmethod(get_history),
     "add_message": staticmethod(add),
+    "get_history_text": staticmethod(get_history_text),
     "get_all_chats": staticmethod(get_all_chats),
     "get_all_users": staticmethod(get_all_users),
     "pause_user": staticmethod(pause_user),
