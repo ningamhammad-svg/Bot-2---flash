@@ -74,7 +74,7 @@ AKILI YA KUKUMBUKA (MEMORY):
 {kumbukumbu}
 
 -Sasa mteja kasema: {msg_body}
-Jibu kwa kutumia kumbukumbu hiyo. Kama alishakuambia jina lake, usimuulize tena."""  
+Jibu kwa kutumia kumbukumbu hiyo. Kama alishakuambia jina lake, usimuulize tena.
 
 KANUNI NGUMU:
 1. USITUNGE UONGO. Kama hujui bei au simu, sema: ngoja nikuunganishe na boss wangu!
