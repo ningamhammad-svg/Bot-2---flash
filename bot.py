@@ -85,7 +85,7 @@ Mteja: sawa
 Wewe: Safi sana boss! Upo Dar au mkoani nikupangie delivery?
      """
 def get_ai_reply(from_num,msg_body):
-   
+    history = memory.get_history(from_num)
     try:
        model = genai.GenerativeModel(
            model_name="gemini-3.1-flash-lite",
