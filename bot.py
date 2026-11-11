@@ -3,8 +3,7 @@ import requests, os
 import json
 import glob
 from datetime import datetime
-from PIL import Image, imageOps
-import numpy as np
+from PIL import Image
 import google.generativeai  as genai
 from dotenv import load_dotenv
 load_dotenv()
@@ -91,16 +90,6 @@ Wewe: Samsung S20 ni 230k tu boss, bei sawa na bure! Upo tayari kuichukua?
 Mteja: sawa
 Wewe: Safi sana boss! Upo Dar au mkoani nikupangie delivery?
      """
-try:
-    from tensorflow.keras.models import load_model
-    MODEL = load_model("keras_model.h5", compile=False)
-    with open("labels.txt", "r") as f:
-        LABELS = [line.strip()[2:] for line in f.readlines()] # inatoa "0 iPhone" -> "iPhone"
-    print(f"MODEL IMEPOKELEWA: {LABELS}")
-except Exception as e:
-    print(f"MODEL HAIKUPAKIWA: {e}")
-    MODEL = None
-    LABELS = []
 def get_ai_reply(from_num, msg_body):
     kumbukumbu = memory.get_history_text(from_num)
     prompt = f"""Mazungumzo yaliyopita na huyu mteja:
@@ -118,43 +107,6 @@ Jibu kwa kutumia kumbukumbu hiyo. Kama alishakuambia jina lake, usimuulize tena,
     except Exception as e:
         print(f"ERROR: {e}")
         return "kuna hitilafu kidogo ya mtandao bosi"
- def predict_phone(image_bytes):
-    if MODEL is None:
-        return None, 0
-    try:
-        # Hifadhi kwa muda
-        with open("temp_phone.jpg", "wb") as f:
-            f.write(image_bytes)
-        
-        data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
-        image = Image.open("temp_phone.jpg").convert("RGB")
-        image = ImageOps.fit(image, (224, 224), Image.Resampling.LANCZOS)
-        image_array = np.asarray(image)
-        normalized = (image_array.astype(np.float32) / 127.5) - 1
-        data[0] = normalized
-        
-        prediction = MODEL.predict(data)
-        index = np.argmax(prediction)
-        simu = LABELS[index]
-        confidence = float(prediction[0][index])
-        return simu, confidence
-    except Exception as e:
-        print(f"ERROR PREDICT: {e}")
-        return None, 0
-
-def download_whatsapp_media_fixed(media_id):
-    try:
-        # Hatua 1: Pata link halisi ya picha
-        url = f"https://graph.facebook.com/v20.0/{media_id}"
-        headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
-        r = requests.get(url, headers=headers)
-        media_url = r.json().get("url")
-        # Hatua 2: Pakua picha yenyewe kutoka media_url
-        r2 = requests.get(media_url, headers=headers)
-        return r2.content
-    except Exception as e:
-        print(f"ERROR DOWNLOAD: {e}")
-        return None     
 def tuma_location(to):
     url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages"
     headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}", "Content-Type": "application/json"}
@@ -262,37 +214,9 @@ def webhook():
                     value = change.get("value", {})
                     messages = value.get("messages")
                     if messages:
-                        for msg in messages:
-    from_num = msg.get("from")
-    msg_type = msg.get("type")
-    msg_id = msg.get("id")
-    if is_duplicate(msg_id):
-        continue
-
-    # ==== 1. KAMA MTU KATUMA PICHA - HAPA NDIPO MODEL INAINGIA ====
-    if msg_type == "image":
-        image_id = msg.get("image", {}).get("id")
-        caption = msg.get("image", {}).get("caption", "")
-        
-        print(f"PICHA IMEPOKELEWA kutoka {from_num}")
-        image_bytes = download_whatsapp_media_fixed(image_id)
-        
-        if image_bytes:
-            simu, asilimia = predict_phone(image_bytes)
-            print(f"MODEL IMETAMBUA: {simu} - {asilimia*100}%")
-            
-            if simu and asilimia > 0.80:
-                # Tumia bei zako za ukweli kutoka SYSTEM_PROMPT
-                BEI = {
-                    "iPhone": "iPhone 11 Pro ni 300k, iPhone 17 Pro Max ni 550k boss!",
-                    "Samsung": "Samsung S9 ni 200k, Samsung S20 ni 230k boss!",
-                    "Infinix": "Infinix Hot ni 180k boss!",
-                    "Tecno": "Tecno Spark ni 150k boss!",
-                    "Google Pixel": "Google Pixel ni 350k boss!"
-                }
-                jibu = f"Poa boss! Nimeitambua hii ni {simu} ({int(asilimia*100)}% nina uhakika). {BEI.get(simu, 'Tunayo hiyo boss!')} Unataka kuinunua? Nijibu NDIOO"
-                
-                # Pia mtumie picha za hiyo simu kutoka products folder
+                         for msg in messages:
+                             from_num = msg.get("from")
+                             msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")
                 picha = glob.glob(f"products/{simu}*.jpg") + glob.glob(f"products/{simu}*.png")
                 if picha:
                     tuma_picha_local(from_num, picha[0], jibu)
