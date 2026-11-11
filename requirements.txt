@@ -4,5 +4,4 @@ gunicorn
 google-generativeai
 python-dotenv
 Pillow
-numpy
-tensorflow
+
