@@ -278,7 +278,7 @@ def webhook():
                             tuma_picha_local(from_num, "products/iPhone.jpg", "iPhone Pro Max - Tsh. 780k, Original na warranty")
                             return
                         elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
-                             bidhaa_zote = glob.glob("products/*.*")
+                            bidhaa_zote = glob.glob("products/*.*")
                         for picha in bidhaa_zote[:7]: # tuma 7 tu, WhatsApp inachoka zikiwa nyingi sana
                             tuma_picha_local(from_num, picha, "Hizi hapa bidhaa zetu maarufu")
                             return
