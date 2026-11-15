@@ -217,7 +217,7 @@ def webhook():
                         for msg in messages:
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")
-                        picha = glob.glob(f"products/{simu}*.jpg") + glob.glob(f"products/{simu}*.png")
+                       
                         if picha:
                             tuma_picha_local(from_num, picha[0], jibu)
                         else:
