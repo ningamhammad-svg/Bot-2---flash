@@ -259,8 +259,8 @@ def webhook():
                                                   "complaint", "help"]
                         if any(k in lower for k in order_keywords):
                             tuma_alert_kwa_mmiliki(from_num, msg_body, "ORDER") 
-                            elif any(k in lower for k in shida_keywords):
-                                tuma_alert_kwa_mmiliki(from_num, msg_body, "SHIDA") 
+                        elif any(k in lower for k in shida_keywords):
+                            tuma_alert_kwa_mmiliki(from_num, msg_body, "SHIDA") 
                         keywords = ["location", "Google", "map","nawapataje","ziko","duka","mnako","mko","patikana","address","link", "ramani",
                                             "mko wapi", "mnapatikana wapi", "mko wapi", "duka liko wapi", "mahali mlipo" "ofisi zenu", "kufika",
                                            "where","locate","located","pin","come","direction","find you","office","shop"]
