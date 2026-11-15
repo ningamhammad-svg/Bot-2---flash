@@ -254,7 +254,6 @@ def webhook():
                                 print(">>>NINATUMA LOCATION<<<")
                                 tuma_location(from_num)
                             elif "iPhone" in lower:
-   
                                 picha_za_iPhone = glob.glob("products/iPhone*.jpg") + glob.glob("products/iPhone*.png")
                                 if picha_za_iPhone:
                                     for picha in picha_za_iPhone[:5]: # tuma 5 za kwanza usijaze bando
