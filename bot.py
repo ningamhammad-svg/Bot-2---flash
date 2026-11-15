@@ -226,9 +226,9 @@ def webhook():
                         memory.add_message(from_num, "user", f"[Ametuma picha ya {simu}] {caption}")
                         memory.add_message(from_num, "bot", jibu)
                         continue # Usimpeleke kwa Gemini tena, tumeshamjibu
-                        else:
-                            send_whatsapp_reply(from_num, "Poa boss! Nimeipokea picha lakini sijaiona vizuri. Tuma nyingine iliyo wazi, simu iwe katikati boss.")
-                            continue
+                        
+                        send_whatsapp_reply(from_num, "Poa boss! Nimeipokea picha lakini sijaiona vizuri. Tuma nyingine iliyo wazi, simu iwe katikati boss.")
+                        continue
     
                         msg_body = msg.get("text", {}).get("body", "") or ""
                         if msg_body:
