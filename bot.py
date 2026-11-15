@@ -217,77 +217,64 @@ def webhook():
                         for msg in messages:
                             from_num = msg.get("from")
                             msg_body = msg.get("text", {}).get("body", "") or msg.get("image", {}).get("caption", "")
-                       
-                        if picha:
-                            tuma_picha_local(from_num, picha[0], jibu)
-                        else:
-                            send_whatsapp_reply(from_num, jibu)
-                
-                        memory.add_message(from_num, "user", f"[Ametuma picha ya {simu}] {caption}")
-                        memory.add_message(from_num, "bot", jibu)
-                        continue # Usimpeleke kwa Gemini tena, tumeshamjibu
-                        
-                        send_whatsapp_reply(from_num, "Poa boss! Nimeipokea picha lakini sijaiona vizuri. Tuma nyingine iliyo wazi, simu iwe katikati boss.")
-                        continue
-    
-                        msg_body = msg.get("text", {}).get("body", "") or ""
-                        if msg_body:
-                            print(f"MESSAGE FROM {from_num}: {msg_body}") 
+                            if msg_body:
+                                print(f"MESSAGE FROM {from_num}: {msg_body}") 
                             msg_id = msg.get("id")
                             if is_duplicate(msg_id):
                                 print(f"DUPLICATE IMEZUIWA: {msg_id}")
                                 continue
-                        memory.add_message(from_num, "user", msg_body)    
-                        stored = json.load(open("memory.json")) if os.path.exists("memory.json") else {}
-                        if stored.get("paused_users", {}).get(from_num):
-                            print(f"BOT IMEZUIWA kwa {from_num}, meseji inasave tu")
-                            return "OK", 200    
+                            memory.add_message(from_num, "user", msg_body)    
+                            stored = json.load(open("memory.json")) if os.path.exists("memory.json") else {}
+                            if stored.get("paused_users", {}).get(from_num):
+                                print(f"BOT IMEZUIWA kwa {from_num}, meseji inasave tu")
+                                return "OK", 200    
                         
-                        reply = get_ai_reply(from_num, msg_body)
-                        from_num = msg.get("from")
-                        msg_body = msg.get("text", {}).get("body", "") 
+                            reply = get_ai_reply(from_num, msg_body)
+                            from_num = msg.get("from")
+                            msg_body = msg.get("text", {}).get("body", "") 
                            
-                        if not msg_body and msg.get("image"):
-                            msg_body = msg.get("image", {}).get("caption", "")
-                            image_id = msg.get("image", {}).get("id")
+                            if not msg_body and msg.get("image"):
+                                msg_body = msg.get("image", {}).get("caption", "")
+                                image_id = msg.get("image", {}).get("id")
                               
-                        lower = msg_body.lower()
-                        print(f"MESSAGE FROM {from_num}: {msg_body}")
-                        order_keywords = ["order", "nitanunua","namuhitaji boss", "nahitaji delivery", "nimelipa", 
+                            lower = msg_body.lower()
+                            print(f"MESSAGE FROM {from_num}: {msg_body}")
+                            order_keywords = ["order", "nitanunua","namuhitaji boss", "nahitaji delivery", "nimelipa", 
                                                   "nimeshalipa"] 
-                        shida_keywords = ["shida", "haifanyi", "mbovu", "tatizo", "imekataa", "malalamiko", "mwizi", "haijafika",
+                            shida_keywords = ["shida", "haifanyi", "mbovu", "tatizo", "imekataa", "malalamiko", "mwizi", "haijafika",
                                                   "complaint", "help"]
-                        if any(k in lower for k in order_keywords):
-                            tuma_alert_kwa_mmiliki(from_num, msg_body, "ORDER") 
-                        elif any(k in lower for k in shida_keywords):
-                            tuma_alert_kwa_mmiliki(from_num, msg_body, "SHIDA") 
-                        keywords = ["location", "Google", "map","nawapataje","ziko","duka","mnako","mko","patikana","address","link", "ramani",
+                            if any(k in lower for k in order_keywords):
+                                tuma_alert_kwa_mmiliki(from_num, msg_body, "ORDER") 
+                            elif any(k in lower for k in shida_keywords):
+                                tuma_alert_kwa_mmiliki(from_num, msg_body, "SHIDA") 
+                            keywords = ["location", "Google", "map","nawapataje","ziko","duka","mnako","mko","patikana","address","link", "ramani",
                                             "mko wapi", "mnapatikana wapi", "mko wapi", "duka liko wapi", "mahali mlipo" "ofisi zenu", "kufika",
                                            "where","locate","located","pin","come","direction","find you","office","shop"]
-                        if any(k in lower for k in keywords):
-                             print(">>>NINATUMA LOCATION<<<")
-                             tuma_location(from_num)
-                        elif "iPhone" in lower:
-                             picha_za_iPhone = glob.glob("products/iPhone*.jpg") + glob.glob("products/iPhone*.png")
-                        if picha_za_iPhone:
-                          
-                            for picha in picha_za_iPhone[:5]: # tuma 5 za kwanza usijaze bando
-                                tuma_picha_local(from_num, picha, "iPhone Pro Max - Tsh. 780k, Original na warranty")
-                        elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
-                            bidhaa_zote = glob.glob("products/*.*")               
-                        else:
-                            tuma_picha_local(from_num, "products/iPhone.jpg", "iPhone Pro Max - Tsh. 780k, Original na warranty")
-                            return
-                        for picha in bidhaa_zote[:7]: # tuma 7 tu, WhatsApp inachoka zikiwa nyingi sana
-                            tuma_picha_local(from_num, picha, "Hizi hapa bidhaa zetu maarufu")
-                            return
-                        else:
-                            reply = get_ai_reply(from_num,msg_body)
-                            memory.add_message(from_num, "bot", reply)
-                            send_whatsapp_reply(from_num, reply)
+                            if any(k in lower for k in keywords):
+                                print(">>>NINATUMA LOCATION<<<")
+                                tuma_location(from_num)
+                            elif "iPhone" in lower:
+   
+                                picha_za_iPhone = glob.glob("products/iPhone*.jpg") + glob.glob("products/iPhone*.png")
+                                if picha_za_iPhone:
+                                    for picha in picha_za_iPhone[:5]: # tuma 5 za kwanza usijaze bando
+                                        tuma_picha_local(from_num, picha, "iPhone Pro Max - Tsh. 780k, Original na warranty")
+                                       
+                                else:
+                                    tuma_picha_local(from_num, "products/iPhone.jpg", "iPhone Pro Max - Tsh. 780k, Original na warranty")
+                                return
+                            elif "picha" in lower or "katalogi" in lower or "bidhaa" in lower:
+                                bidhaa_zote = glob.glob("products/*.*")
+                                for picha in bidhaa_zote[:7]: # tuma 7 tu, WhatsApp inachoka zikiwa nyingi sana
+                                    tuma_picha_local(from_num, picha, "Hizi hapa bidhaa zetu maarufu")
+                                return
+                            else:
+                                reply = get_ai_reply(from_num,msg_body)
+                                memory.add_message(from_num, "bot", reply)
+                                send_whatsapp_reply(from_num, reply)
     except Exception as e:
         print(f"ERROR: {e}")     
     return "OK", 200  
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)) hii ni bot yangu
