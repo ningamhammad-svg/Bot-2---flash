@@ -4,12 +4,12 @@ from functools import wraps
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash
 from dotenv import load_dotenv
 
-from brain.engine import HotelAssistant
-from brain.storage import (
+from engine import HotelAssistant
+from storage import (
     init_db, save_message, get_stats, get_recent_bookings,
     update_booking_status, get_recent_messages, get_booking
 )
-from brain.whatsapp import send_whatsapp_message
+from whatsapp import send_whatsapp_message
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
