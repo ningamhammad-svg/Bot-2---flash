@@ -1,7 +1,5 @@
-Flask
-requests
-gunicorn
-google-generativeai
-python-dotenv
-Pillow
-
+Flask>=3.0,<4
+python-dotenv>=1.0
+requests>=2.31
+google-genai>=1.0
+gunicorn>=22.0
