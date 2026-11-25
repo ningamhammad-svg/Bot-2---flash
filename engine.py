@@ -2,8 +2,8 @@ import os
 import re
 from google import genai
 from google.genai import types
-from .storage import get_session, set_session, create_booking
-from .whatsapp import send_whatsapp_message
+from storage import get_session, set_session, create_booking
+from whatsapp import send_whatsapp_message
 
 HOTEL_INFO = """
 BUSINESS: Jakicha Motel (DEMO PROFILE)
