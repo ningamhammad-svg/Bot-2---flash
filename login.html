@@ -1,0 +1,4 @@
+<!doctype html><html lang="sw"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jakicha Demo Login</title><link rel="stylesheet" href="/static/style.css"></head>
+<body class="login-bg"><div class="login-card"><div class="brand-mark">JK</div><h1>Jakicha AI Assistant</h1><p>Hotel management demo dashboard</p>
+{% with messages = get_flashed_messages(with_categories=true) %}{% for category,message in messages %}<div class="alert {{category}}">{{message}}</div>{% endfor %}{% endwith %}
+<form method="post"><label>Admin password</label><input type="password" name="password" required placeholder="Enter password"><button type="submit">Sign in</button></form><small>Badilisha ADMIN_PASSWORD kabla ya kuonyesha demo.</small></div></body></html>

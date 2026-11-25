@@ -1,0 +1,25 @@
+<!doctype html><html lang="sw"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jakicha AI Dashboard</title><link rel="stylesheet" href="/static/style.css"></head>
+<body><nav class="topbar"><div class="brand"><span class="brand-mark small">JK</span><div><b>JAKICHA AI</b><small>Hotel Assistant · Demo</small></div></div><a href="/dashboard/logout">Logout</a></nav>
+<main class="container"><section class="welcome"><div><span class="eyebrow">NCIP TECHNOLOGIES · PRODUCT DEMO</span><h1>Guest experience dashboard</h1><p>Booking requests, guest conversations and service insights in one place.</p></div><span class="live-pill">● DEMO SYSTEM</span></section>
+{% with messages = get_flashed_messages(with_categories=true) %}{% for category,message in messages %}<div class="alert {{category}}">{{message}}</div>{% endfor %}{% endwith %}
+<section class="stats">
+<div class="stat"><span>Total messages</span><strong>{{stats.messages}}</strong><small>Guest + assistant messages</small></div>
+<div class="stat"><span>Unique guests</span><strong>{{stats.guests}}</strong><small>Phone numbers</small></div>
+<div class="stat"><span>Booking requests</span><strong>{{stats.bookings}}</strong><small>Requests collected</small></div>
+<div class="stat"><span>Pending</span><strong>{{stats.pending}}</strong><small>Awaiting staff action</small></div>
+<div class="stat"><span>Confirmed</span><strong>{{stats.confirmed}}</strong><small>Marked by staff</small></div>
+</section>
+<section class="panel"><div class="panel-head"><div><h2>Booking requests</h2><p>Requests are not confirmed until reception verifies availability.</p></div></div>
+<div class="table-wrap"><table><thead><tr><th>Ref</th><th>Guest</th><th>Phone</th><th>Dates</th><th>Guests / Room</th><th>Notes</th><th>Status</th><th>Update</th></tr></thead><tbody>
+{% for b in bookings %}<tr><td>JK-{{'%04d'|format(b.id)}}</td><td>{{b.guest_name}}</td><td>{{b.phone}}</td><td>{{b.checkin}} → {{b.checkout}}</td><td>{{b.guests}} / {{b.room_type}}</td><td>{{b.notes}}</td><td><span class="badge {{b.status}}">{{b.status}}</span></td><td><form class="inline-form" method="post" action="/dashboard/booking/{{b.id}}/status"><select name="status"><option value="pending" {% if b.status=='pending' %}selected{% endif %}>Pending</option><option value="contacted" {% if b.status=='contacted' %}selected{% endif %}>Contacted</option><option value="confirmed" {% if b.status=='confirmed' %}selected{% endif %}>Confirmed</option><option value="declined" {% if b.status=='declined' %}selected{% endif %}>Declined</option></select><button class="mini" type="submit">Save</button></form></td></tr>
+{% else %}<tr><td colspan="8" class="empty">Bado hakuna booking requests. Jaribu WhatsApp au demo chat.</td></tr>{% endfor %}
+</tbody></table></div></section>
+<section class="grid-two"><div class="panel"><div class="panel-head"><div><h2>Send WhatsApp message</h2><p>Requires a configured Cloud API and eligible recipient.</p></div></div><form method="post" action="/dashboard/send" class="send-form"><label>Phone number (international format)</label><input name="phone" placeholder="2557XXXXXXXX" required><label>Message</label><textarea name="message" rows="4" required></textarea><button type="submit">Send message</button></form></div>
+<div class="panel"><div class="panel-head"><div><h2>Recent conversations</h2><p>Latest incoming and outgoing messages.</p></div></div><div class="messages">{% for m in messages %}<div class="message {{m.role}}"><div><b>{{m.guest_name or m.phone}}</b><span>{{m.role}} · {{m.created_at}}</span></div><p>{{m.message}}</p></div>{% else %}<p class="empty">No messages yet.</p>{% endfor %}</div></div></section>
+<section class="panel demo-panel"><div class="panel-head"><div><h2>Try the assistant</h2><p>Website preview; no WhatsApp API required for this test.</p></div></div><div id="chat" class="chat-box"><div class="bubble bot">Karibu Jakicha Motel! Andika swali au BOOK kujaribu booking request.</div></div><form id="chat-form" class="chat-form"><input id="chat-input" placeholder="Andika ujumbe..." autocomplete="off" required><button>Send</button></form></section>
+<footer>Powered by <b>NCIP Technologies</b> · Prototype demonstration · Not connected to live room inventory.</footer></main>
+<script>
+const form=document.getElementById('chat-form'), input=document.getElementById('chat-input'), chat=document.getElementById('chat');
+function addBubble(text,who){const d=document.createElement('div');d.className='bubble '+who;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
+form.addEventListener('submit',async e=>{e.preventDefault();const message=input.value.trim();if(!message)return;addBubble(message,'guest');input.value='';try{const r=await fetch('/demo-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:'255700000000',name:'Demo Guest',message})});const data=await r.json();addBubble(data.reply||data.error||'Error','bot');}catch(err){addBubble('Imeshindikana kuwasiliana na server.','bot');}});
+</script></body></html>
