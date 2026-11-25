@@ -3,8 +3,11 @@ import os
 from pathlib import Path
 from datetime import datetime
 
-DB_PATH = os.getenv("DATABASE_PATH", str(Path(__file__).resolve().parents[1] / "data" / "jakicha.db"))
-
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH = os.getenv(
+    "DATABASE_PATH",
+    str(BASE_DIR / "data" / "jakicha.db")
+)
 
 def connect():
     Path(DB_PATH).parent.mkdir(parents=True, exist_ok=True)
